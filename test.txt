@@ -1,0 +1,24 @@
+class BigBoyClass {
+    public static void main(String[] args)
+    {
+       cum = 5 + 5 * 4;
+    }
+}
+
+class test {
+    int cummers;
+    boolean cum;
+    int[] pepe;
+    public int Meth(int a, boolean b){
+	    boolean bob;
+	    bob = b;
+	    return true;
+    }
+    public boolean SetHas_Left(boolean val){
+        cummers = cummers + cum + 5;
+	    return true ;
+    }
+    public boolean SetHas_Left(boolean val){
+	    return true ;
+    }
+}
