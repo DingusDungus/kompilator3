@@ -244,12 +244,12 @@ bool symbolTable::testType(Node *ptr, std::string type)
         return true;
     }
     // debug below
-    std::cout << "(debug) EXPElements: ";
-    for (int i = 0; i < expressionElements.size(); i++)
-    {
-        std::cout << expressionElements[i] << " ";
-    }
-    std::cout << "\n";
+    // std::cout << "(debug) EXPElements: ";
+    // for (int i = 0; i < expressionElements.size(); i++)
+    // {
+        // std::cout << expressionElements[i] << " ";
+    // }
+    // std::cout << "\n";
     // debug above
     if (expressionElements.size() > 0)
     {
@@ -283,12 +283,12 @@ bool symbolTable::testType(Node *ptr)
     if (expressionElements.size() > 0)
     {
         // debug below
-        std::cout << "(debug) EXPElements: ";
-        for (int i = 0; i < expressionElements.size(); i++)
-        {
-            std::cout << expressionElements[i] << " ";
-        }
-        std::cout << "\n";
+        // std::cout << "(debug) EXPElements: ";
+        // for (int i = 0; i < expressionElements.size(); i++)
+        // {
+            // std::cout << expressionElements[i] << " ";
+        // }
+        // std::cout << "\n";
         // debug above
         std::string type = expressionElements[0];
         for (int i = 0; i < expressionElements.size(); i++)
@@ -353,7 +353,7 @@ method *symbolTable::methodLookup(std::string className, std::string methodName)
     scope *walker = nullptr;
     if (className != "this")
     {
-        std::cout << "MethLookUp: className: " << className << " methodName: " << methodName << std::endl;
+        // std::cout << "MethLookUp: className: " << className << " methodName: " << methodName << std::endl;
         std::string realClassName = "";
         bool classFound = false;
         record *objectRecord = nullptr;
@@ -363,37 +363,37 @@ method *symbolTable::methodLookup(std::string className, std::string methodName)
         objectRecord = lookup(className);
         if (objectRecord != nullptr)
         {
-            std::cout << "(debug) realClassName: " << objectRecord->type << std::endl;
+            // std::cout << "(debug) realClassName: " << objectRecord->type << std::endl;
             realClassName = objectRecord->type;
             if (realClassName != "Class")
             {
-                std::cout << "(debug) Fetched object: "
-                          << className
-                          << " actual class type: "
-                          << realClassName
-                          << std::endl;
-                std::cout << "(debug) Changed className to : " << realClassName << std::endl;
+                // std::cout << "(debug) Fetched object: "
+                          // << className
+                          // << " actual class type: "
+                          // << realClassName
+                          // << std::endl;
+                // std::cout << "(debug) Changed className to : " << realClassName << std::endl;
                 className = realClassName;
             }
         }
         for (int i = 0; i < root->children.size(); i++)
         {
-            std::cout << "scopeId: " << root->children[i]->scopeRecord->id << std::endl;
+            // std::cout << "scopeId: " << root->children[i]->scopeRecord->id << std::endl;
             if (root->children[i]->scopeRecord->id == className)
             {
                 walker = root->children[i];
                 classFound = true;
-                std::cout << "(debug) Class '"
-                          << className
-                          << "' found!!"
-                          << std::endl;
+                // std::cout << "(debug) Class '"
+                          // << className
+                          // << "' found!!"
+                          // << std::endl;
                 methodRecord = (method *)walker->lookup(methodName);
                 if (methodRecord != nullptr)
                 {
-                    std::cout << "(debug) Method '"
-                              << methodRecord->id
-                              << "' found!!"
-                              << std::endl;
+                    // std::cout << "(debug) Method '"
+                              // << methodRecord->id
+                              // << "' found!!"
+                              // << std::endl;
                 }
                 break;
             }
@@ -534,7 +534,7 @@ bool symbolTable::isBoolChildren(Node *ptr)
         }
         else if ((*i)->type == "Expression" && (*i)->value == "")
         {
-            std::cout << "Here! " << (*i)->value << "\n";
+            // std::cout << "Here! " << (*i)->value << "\n";
             return isBoolChildren(*i);
         }
     }
@@ -705,22 +705,22 @@ bool symbolTable::expressionCheckRec(Node *nodePtr)
                 if ((*mChild)->value == "this")
                 {
                     className = (*mChild)->value;
-                    std::cout << "(SOP) className this: " << className << std::endl;
+                    // std::cout << "(SOP) className this: " << className << std::endl;
                 }
                 else
                 {
-                    std::cout << "(debug) start while" << std::endl;
+                    // std::cout << "(debug) start while" << std::endl;
                     while ((*mChild)->children.empty() == false)
                     {
                         mChild = (*mChild)->children.begin();
                         if ((*mChild)->children.empty())
                         {
-                            std::cout << "(debug) going to break" << std::endl;
+                            // std::cout << "(debug) going to break" << std::endl;
                         }
                     }
-                    std::cout << "Before className assign" << std::endl;
+                    // std::cout << "Before className assign" << std::endl;
                     className = (*mChild)->value;
-                    std::cout << "(SOP) className else: " << className << std::endl;
+                    // std::cout << "(SOP) className else: " << className << std::endl;
                 }
                 mChild = mChildBase;
                 mChild++;
@@ -915,8 +915,8 @@ bool symbolTable::testBoolExpression(Node *ptr)
             meth++;
             std::string methodName = (*meth)->value;
             record *methodRecord = lookup(methodName);
-            std::cout << "methodName: " << methodRecord->id << std::endl;
-            std::cout << "methodReturnType: " << methodRecord->type << std::endl;
+            // std::cout << "methodName: " << methodRecord->id << std::endl;
+            // std::cout << "methodReturnType: " << methodRecord->type << std::endl;
             if (methodRecord->type != "boolean")
             {
                 std::cout << "Error; "
@@ -999,7 +999,7 @@ bool symbolTable::expressionCheckRecNode(Node *nodePtr)
         record *arrayVar = lookup(walker->value);
         if (arrayVar != nullptr)
         {
-            std::cout << arrayVar->id << " " << arrayVar->type << "\n";
+            // std::cout << arrayVar->id << " " << arrayVar->type << "\n";
             if (arrayVar->type == "intArray")
             {
                 expressionElements.push_back("int");
@@ -1042,30 +1042,30 @@ bool symbolTable::expressionCheckRecNode(Node *nodePtr)
         if ((*mChild)->value == "this")
         {
             className = (*mChild)->value;
-            std::cout << "(secondary) className this: " << className << std::endl;
+            // std::cout << "(secondary) className this: " << className << std::endl;
         }
         else
         {
-            std::cout << "(debug) start while" << std::endl;
+            // std::cout << "(debug) start while" << std::endl;
             while ((*mChild)->children.empty() == false)
             {
                 mChild = (*mChild)->children.begin();
                 if ((*mChild)->children.empty())
                 {
-                    std::cout << "(debug) reached while loop end" << std::endl;
+                    // std::cout << "(debug) reached while loop end" << std::endl;
                 }
             }
-            std::cout << "Before className assign" << std::endl;
+            // std::cout << "Before className assign" << std::endl;
             className = (*mChild)->value;
-            std::cout << "(secondary) className else: " << className << std::endl;
+            // std::cout << "(secondary) className else: " << className << std::endl;
         }
         mChild = mChildBase;
         mChild++;
         /* debug */ if (className == "")
         {
-            std::cout << "!!HERE!!" << std::endl;
-            std::cout << "value: " << (*mChild)->value << std::endl;
-            std::cout << "id: " << (*mChild)->id << std::endl;
+            // std::cout << "!!HERE!!" << std::endl;
+            // std::cout << "value: " << (*mChild)->value << std::endl;
+            // std::cout << "id: " << (*mChild)->id << std::endl;
         }
         methodRecord = methodLookup(className, (*mChild)->value);
         if (methodRecord == nullptr)
