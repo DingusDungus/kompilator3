@@ -23,7 +23,6 @@ CFG::CFG(Node *_root)
     currentBlk = root;
     nRoot = _root;
     currentNode = nRoot;
-    currentTac = nullptr;
 }
 
 bool CFG::isLeafNode(Node *ptr)
@@ -42,24 +41,55 @@ std::string CFG::genTempName()
     return temp;
 }
 
-void CFG::tacExpression(Node *ptr)
+std::string CFG::tacExpression(Node *ptr)
 {
-    auto child = ptr->children.begin();
     int posCount = 0;
-    if (isLeafNode((*child)))
+    tac *newTac = new tac;
+    if (isLeafNode(ptr))
     {
-
+        return ptr->value;
     }
-    else if (isExpressionHeadNode((*child)))
+    else if (isExpressionHeadNode(ptr))
     {
-
+        newTac->op = ptr->type;
+        auto child = ptr->children.begin();
+        newTac->lhs = tacExpression((*child));
+        child++;
+        newTac->rhs = tacExpression((*child));
+        currentBlk->instructions.push_back(newTac);
+        return genTempName();
     }
-    
+    else if (isUnaryHeadNode(ptr))
+    {
+        newTac->op = ptr->type;
+        newTac->result = genTempName();
+        auto child = ptr->children.begin();
+        newTac->lhs = tacExpression((*child));
+        child++;
+        newTac->rhs = "";
+        currentBlk->instructions.push_back(newTac);
+        return genTempName(); 
+    }
+    else if (ptr->type == "IdentifierExpression")
+    {
+        auto child = ptr->children.begin();
+        return (*child)->value;
+    }
+    return " ";
 }
 
 bool CFG::isExpressionHeadNode(Node *ptr)
 {
-    if (ptr->type == "AndOP" || ptr->type == "OrOP" || ptr->type == "LesserOP" || ptr->type == "GreaterOP" || ptr->type == "EqualsOP" || ptr->type == "OrOP" || ptr->type == "AddOP" || ptr->type == "SubOP" || ptr->type == "OrOP" || ptr->type == "MultOP" || ptr->type == "DivOP" || ptr->type == "ArrayIndexAccessExpression" || ptr->type == "newIntArray" || ptr->type == "newIdentifier" || ptr->type == "NotOP")
+    if (ptr->type == "AndOP" || ptr->type == "LesserOP" || ptr->type == "GreaterOP" || ptr->type == "EqualsOP" || ptr->type == "OrOP" || ptr->type == "AddOP" || ptr->type == "SubOP" || ptr->type == "MultOP" || ptr->type == "DivOP")
+    {
+        return true;
+    }
+    return false;
+}
+
+bool CFG::isUnaryHeadNode(Node *ptr)
+{
+    if (ptr->type == "ArrayIndexAccessExpression" || ptr->type == "newIntArray" || ptr->type == "newIdentifier" || ptr->type == "NotOP")
     {
         return true;
     }
@@ -68,11 +98,43 @@ bool CFG::isExpressionHeadNode(Node *ptr)
 
 void CFG::buildCFG()
 {
-    for (auto i = currentNode->children.begin();i != currentNode->children.end();i++)
+    for (auto i = nRoot->children.begin(); i != nRoot->children.end(); i++)
     {
-        if ((*i)->type == "AssignStatement") 
+        if ((*i)->type == "AssignStatement")
         {
-            
+            auto child = (*i)->children.begin();
+            tac *newTac = new tac;
+            newTac->result = (*child)->value;
+            child++;
+            auto expressionChild = (*child)->children.begin();
+            newTac->lhs = tacExpression((*expressionChild));
+            expressionChild++;
+            newTac->rhs = tacExpression((*expressionChild));
+            currentBlk->instructions.push_back(newTac);
+        }
+        buildCFGrec((*i));
+    }
+}
+
+void CFG::buildCFGrec(Node *ptr)
+{
+    for (auto i = ptr->children.begin(); i != currentNode->children.end(); i++)
+    {
+        if ((*i)->type == "AssignStatement")
+        {
+            auto child = (*i)->children.begin();
+            tac *newTac = new tac;
+            newTac->result = (*child)->value;
+            child++;
+            auto expressionChild = (*child)->children.begin();
+            newTac->lhs = tacExpression((*expressionChild));
+            expressionChild++;
+            newTac->rhs = tacExpression((*expressionChild));
+            currentBlk->instructions.push_back(newTac);
+        }
+        else
+        {
+            buildCFGrec((*i));
         }
     }
 }

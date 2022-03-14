@@ -8,6 +8,7 @@ class tac
 {
 public:
     std::string op, lhs, rhs, result;
+    bool lhsSet;
     void dump()
     {
         printf("%s := %s %s %s", result, lhs, op, rhs);
