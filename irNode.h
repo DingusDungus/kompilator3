@@ -15,6 +15,7 @@ class irNode
     std::string name;
     std::string lhs_name;
     std::string rhs_name;
+    std::string type;
 
     std::string virtual genIr(BBlock *currentBlock);
 
@@ -23,11 +24,12 @@ class irNode
 
 class subExpression : public irNode
 {
+    subExpression() { type = "SUB"; }
     std::string genIr(BBlock *currentBlock) override
     {
         name = genName();
         lhs_name = child[0]->genIr(currentBlock);
-        rhs_name = child[0]->genIr(currentBlock);
+        rhs_name = child[1]->genIr(currentBlock);
         tac *in = new expression("-", lhs_name, rhs_name, name);
         currentBlock->instructions.push_back(in);
         return name;
@@ -36,11 +38,12 @@ class subExpression : public irNode
 
 class addExpression : public irNode
 {
+    addExpression() { type = "ADD"; }
     std::string genIr(BBlock *currentBlock) override
     {
         name = genName();
         lhs_name = child[0]->genIr(currentBlock);
-        rhs_name = child[0]->genIr(currentBlock);
+        rhs_name = child[1]->genIr(currentBlock);
         tac *in = new expression("+", lhs_name, rhs_name, name);
         currentBlock->instructions.push_back(in);
         return name;
@@ -62,6 +65,16 @@ class integer : public irNode
     std::string genIr(BBlock *currentBlock) override
     {
         return value;
+    }
+};
+
+class temp: public irNode
+{
+    std::string genIr(BBlock *currentBlock) override
+    {
+        std::string tempName = "_" + std::to_string(currentBlock->tempCount);
+        currentBlock->tempCount++;
+        return tempName;
     }
 };
 
