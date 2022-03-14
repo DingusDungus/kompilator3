@@ -29,7 +29,7 @@ private:
     tac *currentTac;
     std::string genBlkName();
     std::string genTempName();
-    bool isExpression(Node *ptr);
+    bool isExpressionHeadNode(Node *ptr);
     void tacExpression(Node *ptr);
     bool isLeafNode(Node *ptr);
 
