@@ -68,7 +68,7 @@ std::string CFG::tacExpression(Node *ptr)
         child++;
         newTac->rhs = "";
         currentBlk->instructions.push_back(newTac);
-        return genTempName(); 
+        return genTempName();
     }
     else if (ptr->type == "IdentifierExpression")
     {
@@ -100,7 +100,7 @@ void CFG::buildCFG()
 {
     for (auto i = nRoot->children.begin(); i != nRoot->children.end(); i++)
     {
-      // std::cout << "CFG: " << (*i)->type << std::endl;
+        // std::cout << "CFG: " << (*i)->type << std::endl;
         if ((*i)->type == "AssignStatement")
         {
             auto child = (*i)->children.begin();
@@ -113,7 +113,10 @@ void CFG::buildCFG()
             newTac->rhs = tacExpression((*expressionChild));
             currentBlk->instructions.push_back(newTac);
         }
-        buildCFGrec((*i));
+        else
+        {
+            buildCFGrec((*i));
+        }
     }
 }
 
