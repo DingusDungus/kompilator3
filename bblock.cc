@@ -100,6 +100,7 @@ void CFG::buildCFG()
 {
     for (auto i = nRoot->children.begin(); i != nRoot->children.end(); i++)
     {
+      // std::cout << "CFG: " << (*i)->type << std::endl;
         if ((*i)->type == "AssignStatement")
         {
             auto child = (*i)->children.begin();

@@ -1,6 +1,6 @@
 class BigBoyClass {
     public static void main(String[] args) {
-        System.out.println(test.Meth(test.SetHas_Left(true),true));
+        System.out.println(test.Meth(69,true));
     }
 }
 
@@ -15,11 +15,8 @@ class test {
         return a;
     }
     public boolean SetHas_Left(boolean val) {
-        number = new test().hello(12,false);
+        number = 5;
         return true;
-    }
-    public test anything(int a, boolean b){
-        return new test().anything(this.SetHas_Left(true),false);
     }
 }
 
