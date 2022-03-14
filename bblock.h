@@ -26,12 +26,13 @@ private:
     int blockNr;
     BBlock *root;
     BBlock *currentBlk;
-    tac *currentTac;
+    std::vector<tac *> temp;
     std::string genBlkName();
     std::string genTempName();
     bool isExpressionHeadNode(Node *ptr);
-    void tacExpression(Node *ptr);
     bool isLeafNode(Node *ptr);
+    bool isUnaryHeadNode(Node *ptr);
+    std::string tacExpression(Node *ptr);
 
     Node *nRoot;
     Node *currentNode;
@@ -40,7 +41,7 @@ public:
     CFG();
     CFG(Node *root);
     void buildCFG();
-    void buildCFGrec();
+    void buildCFGrec(Node *ptr);
 };
 
 #endif

@@ -9,23 +9,15 @@ n3 -> n4
 n5 [label="AssignStatement:4"];
 n6 [label="Identifier:num"];
 n5 -> n6
-n7 [label="AddOP:4"];
-n8 [label="IntegerLiteral:10"];
+n7 [label="NotOP:NotOP"];
+n8 [label="BooleanExpression:true"];
 n7 -> n8
-n9 [label="Expression:4"];
-n10 [label="MultOP:4"];
-n11 [label="IntegerLiteral:12"];
-n10 -> n11
-n12 [label="IntegerLiteral:18"];
-n10 -> n12
-n9 -> n10
-n7 -> n9
 n5 -> n7
 n3 -> n5
 n1 -> n3
 n0 -> n1
-n13 [label="ClassDeclarations:"];
-n0 -> n13
-n14 [label="End:"];
-n0 -> n14
+n9 [label="ClassDeclarations:"];
+n0 -> n9
+n10 [label="End:"];
+n0 -> n10
 }
