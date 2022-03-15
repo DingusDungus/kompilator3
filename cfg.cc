@@ -1,4 +1,4 @@
-#include "bblock.h"
+#include "cfg.h"
 
 std::string CFG::genBlkName()
 {

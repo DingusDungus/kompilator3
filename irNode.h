@@ -75,6 +75,22 @@ class addExpression : public irNode
     }
 };
 
+class ifElse : public irNode
+{
+    ifElse() { type = "ifElse"; }
+    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+    {
+        name = genName(node, currentBlock);
+        auto childNode = (*node)->children.begin();
+        lhs_name = child[0]->genIr(childNode, currentBlock);
+        childNode++;
+        rhs_name = child[1]->genIr(childNode, currentBlock);
+        tac *in = new expression("+", lhs_name, rhs_name, name);
+        currentBlock->instructions.push_back(in);
+        return name;
+    }
+};
+
 class identifier : public irNode
 {
     std::string value;

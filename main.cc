@@ -2,7 +2,7 @@
 #include "parser.tab.hh"
 #include "symbolTable.h"
 #include "semanticAnalyser.h"
-#include "bblock.h"
+#include "cfg.h"
 
 extern Node *root;
 extern FILE *yyin;
