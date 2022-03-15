@@ -1,4 +1,5 @@
 #include "cfg.h"
+#include "irNode.h"
 
 std::string CFG::genBlkName()
 {
@@ -42,6 +43,40 @@ void CFG::buildCFG()
     }
 }
 
+irNode* parseNodes(Node* ptr)
+{
+    if (ptr->type == "AddOP") {
+        irNode* node = new addExpression();
+    }
+    else if (ptr->type == "SubOP") {
+
+    }
+    else if (ptr->type == "MultOP") {
+
+    }
+    else if (ptr->type == "Identifier") {
+
+    }
+    else if (ptr->type == "IntegerLiteral") {
+
+    }
+    else if (ptr->type == "SystemOutPrintStatement") {
+
+    }
+    else if (ptr->type == "Identifier") {
+
+    }
+    else if (ptr->type == "Identifier") {
+
+    }
+    else if (ptr->type == "Identifier") {
+
+    }
+    else if (ptr->type == "Identifier") {
+
+    }
+    return nullptr;
+}
 
 void CFG::postOrderTraversal(Node *leaf)
 {

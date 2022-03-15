@@ -45,6 +45,7 @@ public:
 
 class subExpression : public irNode
 {
+    public:
     subExpression() { type = "SUB"; }
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
@@ -61,6 +62,7 @@ class subExpression : public irNode
 
 class addExpression : public irNode
 {
+    public:
     addExpression() { type = "ADD"; }
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
@@ -77,6 +79,7 @@ class addExpression : public irNode
 
 class ifStmt : public irNode
 {
+    public:
     ifStmt() { type = "ifStmt"; }
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
@@ -93,6 +96,7 @@ class ifStmt : public irNode
 
 class whileStmt : public irNode
 {
+    public:
     whileStmt() { type = "whileStmt"; }
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
@@ -109,6 +113,7 @@ class whileStmt : public irNode
 
 class identifier : public irNode
 {
+    public:
     std::string value;
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
@@ -118,6 +123,7 @@ class identifier : public irNode
 
 class integer : public irNode
 {
+    public:
     std::string value;
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
@@ -127,6 +133,7 @@ class integer : public irNode
 
 class temp : public irNode
 {
+    public:
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
         std::string tempName = "_" + std::to_string(currentBlock->tempCount);

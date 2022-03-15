@@ -22,10 +22,12 @@ private:
     bool isLeafNode(Node *ptr);
     bool isUnaryHeadNode(Node *ptr);
     std::string tacExpression(Node *ptr);
+    irNode* parseNodes(Node* ptr);
 
     Node *nRoot;
     irNode *iRoot;
     std::vector<std::string> postOrderList;
+    std::vector<irNode*> postOrderNodes;
 
 public:
     CFG();
