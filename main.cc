@@ -16,7 +16,6 @@ int main(int argc, char **argv)
 {
   //Reads from file if a file name is passed as an argument. Otherwise, reads from stdin.
   symbolTable ST;
-  CFG cfgGraph(root);
   if (argc > 1)
   {
     if (!(yyin = fopen(argv[1], "r")))
@@ -41,7 +40,8 @@ int main(int argc, char **argv)
     std::cout << "Duplicate found!!\n";
     return 1;
   }
-  cfgGraph.buildCFGrec(root);
+  CFG cfgGraph(root);
+  cfgGraph.buildCFG();
 
   return 0;
 }

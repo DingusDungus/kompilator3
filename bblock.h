@@ -6,6 +6,7 @@
 
 #include "tac.h"
 #include "Node.h"
+#include "irNode.h"
 
 class BBlock
 {
@@ -28,14 +29,13 @@ private:
     BBlock *currentBlk;
     std::vector<tac *> temp;
     std::string genBlkName();
-    std::string genTempName();
     bool isExpressionHeadNode(Node *ptr);
     bool isLeafNode(Node *ptr);
     bool isUnaryHeadNode(Node *ptr);
     std::string tacExpression(Node *ptr);
 
     Node *nRoot;
-    Node *currentNode;
+    irNode *iRoot;
 
 public:
     CFG();

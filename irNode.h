@@ -5,10 +5,11 @@
 #include <vector>
 
 #include "bblock.h"
+#include "Node.h"
 
-class irNode 
+class irNode
 {
-    public:
+public:
     irNode() {}
 
     std::vector<irNode *> child;
@@ -17,19 +18,41 @@ class irNode
     std::string rhs_name;
     std::string type;
 
-    std::string virtual genIr(BBlock *currentBlock);
+    std::string virtual genIr(std::_List_iterator<Node *> node, BBlock *currentBlock);
 
-    std::string genName();
+    std::string genName(std::_List_iterator<Node *> node, BBlock *currentBlk)
+    {
+        node--;
+        if ((*node)->type == "IdentifierExpression")
+        {
+            auto child = (*node)->children.begin();
+            return (*child)->value;
+        }
+        else
+        {
+            return genTempName(currentBlk);
+        }
+    }
+    std::string genTempName(BBlock *currentBlk)
+    {
+        {
+            std::string temp = "_+" + std::to_string(currentBlk->tempCount);
+            currentBlk->tempCount++;
+            return temp;
+        }
+    }
 };
 
 class subExpression : public irNode
 {
     subExpression() { type = "SUB"; }
-    std::string genIr(BBlock *currentBlock) override
+    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
-        name = genName();
-        lhs_name = child[0]->genIr(currentBlock);
-        rhs_name = child[1]->genIr(currentBlock);
+        name = genName(node, currentBlock);
+        auto childNode = (*node)->children.begin();
+        lhs_name = child[0]->genIr(childNode, currentBlock);
+        childNode++;
+        rhs_name = child[1]->genIr(childNode, currentBlock);
         tac *in = new expression("-", lhs_name, rhs_name, name);
         currentBlock->instructions.push_back(in);
         return name;
@@ -39,11 +62,13 @@ class subExpression : public irNode
 class addExpression : public irNode
 {
     addExpression() { type = "ADD"; }
-    std::string genIr(BBlock *currentBlock) override
+    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
-        name = genName();
-        lhs_name = child[0]->genIr(currentBlock);
-        rhs_name = child[1]->genIr(currentBlock);
+        name = genName(node, currentBlock);
+        auto childNode = (*node)->children.begin();
+        lhs_name = child[0]->genIr(childNode, currentBlock);
+        childNode++;
+        rhs_name = child[1]->genIr(childNode, currentBlock);
         tac *in = new expression("+", lhs_name, rhs_name, name);
         currentBlock->instructions.push_back(in);
         return name;
@@ -53,24 +78,24 @@ class addExpression : public irNode
 class identifier : public irNode
 {
     std::string value;
-    std::string genIr(BBlock *currentBlock) override
+    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
-        return value;
+        return (*node)->value;
     }
 };
 
 class integer : public irNode
 {
     std::string value;
-    std::string genIr(BBlock *currentBlock) override
+    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
-        return value;
+        return (*node)->value;
     }
 };
 
-class temp: public irNode
+class temp : public irNode
 {
-    std::string genIr(BBlock *currentBlock) override
+    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
         std::string tempName = "_" + std::to_string(currentBlock->tempCount);
         currentBlock->tempCount++;
