@@ -49,16 +49,16 @@ irNode* parseNodes(Node* ptr)
         irNode* node = new addExpression();
     }
     else if (ptr->type == "SubOP") {
-
+        irNode* node = new subExpression();
     }
     else if (ptr->type == "MultOP") {
 
     }
     else if (ptr->type == "Identifier") {
-
+        irNode* node = new identifier();
     }
     else if (ptr->type == "IntegerLiteral") {
-
+        irNode* node = new integer();
     }
     else if (ptr->type == "SystemOutPrintStatement") {
 
