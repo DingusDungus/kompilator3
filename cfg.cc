@@ -54,26 +54,67 @@ irNode* parseNodes(Node* ptr)
     else if (ptr->type == "MultOP") {
 
     }
+    else if (ptr->type == "DivOP") {
+
+    }
+    else if (ptr->type == "AndOP") {
+
+    }
+    else if (ptr->type == "OrOP") {
+
+    }
+    else if (ptr->type == "LesserOP") {
+
+    }
+    else if (ptr->type == "GreaterOP") {
+
+    }
+    else if (ptr->type == "EqualsOP") {
+
+    }
+    else if (ptr->type == "ArrayIndexAccessExpression") {
+
+    }
+    else if (ptr->type == "IdentifierExpression") {
+
+    }
+    else if (ptr->type == "ThisExpression") {
+
+    }
+    else if (ptr->type == "newIntArray") {
+
+    }
+    else if (ptr->type == "newIdentifier") {
+
+    }
+    else if (ptr->type == "NotOP") {
+
+    }
+    else if (ptr->type == "Expression") {
+
+    }
+    // Statements
+    else if (ptr->type == "SystemOutPrintStatement") {
+
+    }
+    else if (ptr->type == "AssignStatement") {
+
+    }
+    else if (ptr->type == "WhileStatement") {
+
+    }
+    else if (ptr->type == "IF_ElseStatement") {
+
+    }
+    else if (ptr->type == "ArrayIndexAssignStatement") {
+
+    }
+    // Variables
     else if (ptr->type == "Identifier") {
         irNode* node = new identifier();
     }
     else if (ptr->type == "IntegerLiteral") {
         irNode* node = new integer();
-    }
-    else if (ptr->type == "SystemOutPrintStatement") {
-
-    }
-    else if (ptr->type == "Identifier") {
-
-    }
-    else if (ptr->type == "Identifier") {
-
-    }
-    else if (ptr->type == "Identifier") {
-
-    }
-    else if (ptr->type == "Identifier") {
-
     }
     return nullptr;
 }
