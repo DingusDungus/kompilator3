@@ -2,6 +2,7 @@
 #define CFG_H
 
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "tac.h"
@@ -24,12 +25,15 @@ private:
 
     Node *nRoot;
     irNode *iRoot;
+    std::vector<std::string> postOrderList;
 
 public:
     CFG();
     CFG(Node *root);
     void buildCFG();
     void buildCFGrec(Node *ptr);
+    void postOrderTraversal(Node *leaf);
+    void printPostOrder();
 };
 
 #endif

@@ -41,7 +41,9 @@ int main(int argc, char **argv)
     return 1;
   }
   CFG cfgGraph(root);
-  cfgGraph.buildCFG();
+  // cfgGraph.buildCFG();
+  cfgGraph.postOrderTraversal(root);
+  cfgGraph.printPostOrder();
 
   return 0;
 }

@@ -13,7 +13,7 @@ CFG::CFG()
     root = new BBlock(genBlkName());
     currentBlk = root;
     nRoot = nullptr;
-    iRoot = new irNode;
+    iRoot = nullptr;
 }
 
 CFG::CFG(Node *_root)
@@ -22,7 +22,7 @@ CFG::CFG(Node *_root)
     root = new BBlock(genBlkName());
     currentBlk = root;
     nRoot = _root;
-    iRoot = new irNode;
+    iRoot = nullptr;
 }
 
 bool CFG::isLeafNode(Node *ptr)
@@ -41,3 +41,28 @@ void CFG::buildCFG()
         
     }
 }
+
+
+void CFG::postOrderTraversal(Node *leaf)
+{
+   if(leaf == nullptr) {
+        return;
+    }
+
+    for (auto i = leaf->children.begin(); i != leaf->children.end(); i++) {
+        postOrderTraversal((*i));
+    }
+
+    // do something with the node here
+    postOrderList.push_back(leaf->type + " : " + leaf->value);
+}
+
+void CFG::printPostOrder()
+{
+    std::cout << "--- Printing post order ---" << std::endl;
+    for(int i = 0; i < postOrderList.size(); i++)
+    {
+        std::cout << postOrderList[i] << std::endl;
+    }
+}
+

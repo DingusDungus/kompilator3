@@ -18,7 +18,7 @@ public:
     std::string rhs_name;
     std::string type;
 
-    std::string virtual genIr(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    std::string virtual genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) = 0;
 
     std::string genName(std::_List_iterator<Node *> node, BBlock *currentBlk)
     {
@@ -75,9 +75,25 @@ class addExpression : public irNode
     }
 };
 
-class ifElse : public irNode
+class ifStmt : public irNode
 {
-    ifElse() { type = "ifElse"; }
+    ifStmt() { type = "ifStmt"; }
+    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+    {
+        name = genName(node, currentBlock);
+        auto childNode = (*node)->children.begin();
+        lhs_name = child[0]->genIr(childNode, currentBlock);
+        childNode++;
+        rhs_name = child[1]->genIr(childNode, currentBlock);
+        tac *in = new expression("+", lhs_name, rhs_name, name);
+        currentBlock->instructions.push_back(in);
+        return name;
+    }
+};
+
+class whileStmt : public irNode
+{
+    whileStmt() { type = "whileStmt"; }
     std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
     {
         name = genName(node, currentBlock);
