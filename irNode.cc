@@ -111,11 +111,22 @@ retStruct irNode::booleanExpression(std::_List_iterator<Node *> node, BBlock *cu
 // if-else
 retStruct irNode::ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
-    BBlock *headBlock = new BBlock(genBlkName());
-    irNode bExpression("booleanExpression");
-    bExpression.genIr((*node)->children.begin(), currentBlock);
+    auto childNode = (*node)->children.begin();
+    child[0].genIr((*node)->children.begin(), currentBlock);
     BBlock *trueBlock = new BBlock(genBlkName());
+    lhs = child[1].genIr(childNode, trueBlock);
+    childNode++;
+    BBlock *falseBlock = new BBlock(genBlkName());
+    rhs = child[2].genIr(childNode, falseBlock);
+    BBlock *joinBlock = new BBlock(genBlkName());
 
+    currentBlock->trueExit = trueBlock;
+    currentBlock->falseExit = falseBlock;
+
+    trueBlock->trueExit = joinBlock;
+    falseBlock->trueExit = joinBlock;
+
+    return retStruct("ifElse-joinBlock", joinBlock);
 }
 
 // identifier
