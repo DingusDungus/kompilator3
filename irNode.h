@@ -24,6 +24,7 @@ private:
     retStruct subExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct addExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct whileStmt(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct identifier(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct integer(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct temp(std::_List_iterator<Node *> node, BBlock *currentBlock);
