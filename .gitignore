@@ -31,5 +31,16 @@
 *.out
 *.app
 *compiler
+
+# Extra
 tree.pdf
 tree.dot
+irTree.dot
+*.cache/
+*.vscode/
+*.vscode/settings.json
+compile_commands.json
+lex.yy.c
+parser.tab.cc
+parser.tab.hh
+stack.hh
