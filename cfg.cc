@@ -35,12 +35,28 @@ bool CFG::isLeafNode(Node *ptr)
     return false;
 }
 
+void CFG::buildIrNodeAST(Node* node, irNode* iNode)
+{
+    if (node == nullptr) {
+        return;
+    }
+    iNode = new irNode(node->type, node->value);
+    for (auto i = node->children.begin(); i != node->children.end(); i++) {
+        irNode* temp = nullptr;
+        iNode->child.push_back(temp);
+        buildIrNodeAST((*i), temp);
+    }
+}
+
+void CFG::buildIrNodeAST(Node* node)
+{
+    // start recursion
+    buildIrNodeAST(nRoot,iRoot);
+}
+
 void CFG::buildCFG()
 {
-    for (auto i = nRoot->children.begin();i != nRoot->children.end();i++)
-    {
-        
-    }
+
 }
 
 Node* CFG::searchTree(Node* root, std::string value)

@@ -44,6 +44,8 @@ int main(int argc, char **argv)
   // cfgGraph.buildCFG();
   cfgGraph.postOrderTraversal(root);
   cfgGraph.printPostOrder();
+  cfgGraph.buildIrNodeAST(root);
+  // cfgGraph.generate_tree();
   Node* result = cfgGraph.searchTree(root, "BigBoyClass");
   if (result != nullptr){
     std::cout << "Search result: " << result->type << " : " << result->value << std::endl;
