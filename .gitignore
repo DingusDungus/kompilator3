@@ -37,6 +37,7 @@ tree.pdf
 tree.dot
 irTree.dot
 *.cache
+*.vscode
 compile_commands.json
 lex.yy.c
 parser.tab.cc
