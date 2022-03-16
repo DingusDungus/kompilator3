@@ -7,116 +7,82 @@
 #include "bblock.h"
 #include "Node.h"
 
+struct retStruct
+{
+    std::string value;
+    BBlock *bblock;
+    retStruct() : bblock(nullptr) {}
+    retStruct(std::string value) : bblock(nullptr), value(value) {}
+    retStruct(std::string value, BBlock *bblock) : bblock(bblock), value(value) {}
+};
+
 class irNode
 {
 public:
-    irNode() {}
+    irNode();
+    virtual ~irNode();
 
     std::vector<irNode *> child;
     std::string name;
-    std::string lhs_name;
-    std::string rhs_name;
+    retStruct lhs;
+    retStruct rhs;
     std::string type;
 
-    std::string virtual genIr(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct virtual genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) = 0;
 
-    std::string genName(std::_List_iterator<Node *> node, BBlock *currentBlk)
-    {
-        node--;
-        if ((*node)->type == "IdentifierExpression")
-        {
-            auto child = (*node)->children.begin();
-            return (*child)->value;
-        }
-        else
-        {
-            return genTempName(currentBlk);
-        }
-    }
-    std::string genTempName(BBlock *currentBlk)
-    {
-        {
-            std::string temp = "_+" + std::to_string(currentBlk->tempCount);
-            currentBlk->tempCount++;
-            return temp;
-        }
-    }
+    std::string genName(std::_List_iterator<Node *> node, BBlock *currentBlk);
+    std::string genTempName(BBlock *currentBlk);
+    std::string genBlkName();
+};
+
+class booleanExpression : public irNode
+{
+    public:
+    booleanExpression() { type = "booleanExpression"; }
+    ~booleanExpression() override {}
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 class subExpression : public irNode
 {
     subExpression() { type = "SUB"; }
-    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
-    {
-        name = genName(node, currentBlock);
-        auto childNode = (*node)->children.begin();
-        lhs_name = child[0]->genIr(childNode, currentBlock);
-        childNode++;
-        rhs_name = child[1]->genIr(childNode, currentBlock);
-        tac *in = new expression("-", lhs_name, rhs_name, name);
-        currentBlock->instructions.push_back(in);
-        return name;
-    }
+    ~subExpression() override {}
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 class addExpression : public irNode
 {
     addExpression() { type = "ADD"; }
-    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
-    {
-        name = genName(node, currentBlock);
-        auto childNode = (*node)->children.begin();
-        lhs_name = child[0]->genIr(childNode, currentBlock);
-        childNode++;
-        rhs_name = child[1]->genIr(childNode, currentBlock);
-        tac *in = new expression("+", lhs_name, rhs_name, name);
-        currentBlock->instructions.push_back(in);
-        return name;
-    }
+    ~addExpression() override {}
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 class ifElse : public irNode
 {
     ifElse() { type = "ifElse"; }
-    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
-    {
-        name = genName(node, currentBlock);
-        auto childNode = (*node)->children.begin();
-        lhs_name = child[0]->genIr(childNode, currentBlock);
-        childNode++;
-        rhs_name = child[1]->genIr(childNode, currentBlock);
-        tac *in = new expression("+", lhs_name, rhs_name, name);
-        currentBlock->instructions.push_back(in);
-        return name;
-    }
+    ~ifElse() override {}
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 class identifier : public irNode
 {
+    ~identifier() override {}
     std::string value;
-    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
-    {
-        return (*node)->value;
-    }
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 class integer : public irNode
 {
+
+    ~integer() override {}
     std::string value;
-    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
-    {
-        return (*node)->value;
-    }
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 class temp : public irNode
 {
-    std::string genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
-    {
-        std::string tempName = "_" + std::to_string(currentBlock->tempCount);
-        currentBlock->tempCount++;
-        return tempName;
-    }
+    ~temp() override {}
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 #endif

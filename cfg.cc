@@ -13,7 +13,6 @@ CFG::CFG()
     root = new BBlock(genBlkName());
     currentBlk = root;
     nRoot = nullptr;
-    iRoot = new irNode;
 }
 
 CFG::CFG(Node *_root)
@@ -22,7 +21,6 @@ CFG::CFG(Node *_root)
     root = new BBlock(genBlkName());
     currentBlk = root;
     nRoot = _root;
-    iRoot = new irNode;
 }
 
 bool CFG::isLeafNode(Node *ptr)
