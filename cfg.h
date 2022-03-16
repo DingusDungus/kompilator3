@@ -26,7 +26,7 @@ private:
     Node *nRoot;
     irNode *iRoot;
     std::vector<std::string> postOrderList;
-    std::vector<irNode*> postOrderNodes;
+    std::vector<irNode> postOrderNodes;
 
 public:
     CFG();

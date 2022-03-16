@@ -18,76 +18,31 @@ struct retStruct
 
 class irNode
 {
+private:
+    retStruct booleanExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct subExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct addExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct identifier(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct integer(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct temp(std::_List_iterator<Node *> node, BBlock *currentBlock);
+
 public:
     irNode();
-    virtual ~irNode();
+    irNode(std::string type);
+    ~irNode();
 
-    std::vector<irNode *> child;
+    std::vector<irNode> child;
     std::string name;
     retStruct lhs;
     retStruct rhs;
     std::string type;
 
-    retStruct virtual genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) = 0;
+    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock);
 
     std::string genName(std::_List_iterator<Node *> node, BBlock *currentBlk);
     std::string genTempName(BBlock *currentBlk);
     std::string genBlkName();
-};
-
-class booleanExpression : public irNode
-{
-    public:
-    booleanExpression() { type = "booleanExpression"; }
-    ~booleanExpression() override {}
-    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
-};
-
-class subExpression : public irNode
-{
-    public:
-    subExpression() { type = "SUB"; }
-    ~subExpression() override {}
-    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
-};
-
-class addExpression : public irNode
-{
-    public:
-    addExpression() { type = "ADD"; }
-    ~addExpression() override {}
-    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
-};
-
-class ifElse : public irNode
-{
-    public:
-    ifElse() { type = "ifElse"; }
-    ~ifElse() override {}
-    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
-};
-
-class identifier : public irNode
-{
-    public:
-    ~identifier() override {}
-    std::string value;
-    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
-};
-
-class integer : public irNode
-{
-    public:
-    ~integer() override {}
-    std::string value;
-    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
-};
-
-class temp : public irNode
-{
-    public:
-    ~temp() override {}
-    retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
 
 #endif

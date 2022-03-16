@@ -46,10 +46,10 @@ void CFG::buildCFG()
 irNode* parseNodes(Node* ptr)
 {
     if (ptr->type == "AddOP") {
-        irNode* node = new addExpression();
+        irNode node("addExpression");
     }
     else if (ptr->type == "SubOP") {
-        irNode* node = new subExpression();
+        irNode node("subExpression");
     }
     else if (ptr->type == "MultOP") {
 
@@ -111,10 +111,10 @@ irNode* parseNodes(Node* ptr)
     }
     // Variables
     else if (ptr->type == "Identifier") {
-        irNode* node = new identifier();
+        irNode node("identifier");
     }
     else if (ptr->type == "IntegerLiteral") {
-        irNode* node = new integer();
+        irNode node("integer");
     }
     return nullptr;
 }

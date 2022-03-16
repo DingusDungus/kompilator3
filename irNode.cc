@@ -4,8 +4,41 @@ int blockNr = 0;
 
 // base-class
 irNode::irNode() {}
+irNode::irNode(std::string type) : type(type) {}
 
 irNode::~irNode() {}
+
+retStruct irNode::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock)
+{
+    if (type == "subExpression")
+    {
+        return subExpression(node, currentBlock);
+    }
+    else if (type == "addExpression")
+    {
+        return addExpression(node, currentBlock);
+    }
+    else if (type == "booleanExpression")
+    {
+        return booleanExpression(node, currentBlock);
+    }
+    else if (type == "ifElse")
+    {
+        return ifElse(node, currentBlock);
+    }
+    else if (type == "identifier")
+    {
+        return identifier(node, currentBlock);
+    }
+    else if (type == "integer")
+    {
+       return integer(node, currentBlock); 
+    }
+    else if (type == "temp")
+    {
+        return temp(node, currentBlock);
+    }
+}
 
 std::string irNode::genName(std::_List_iterator<Node *> node, BBlock *currentBlk)
 {
@@ -38,67 +71,67 @@ std::string irNode::genBlkName()
 }
 
 // sub-expression
-retStruct subExpression::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+retStruct irNode::subExpression(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     name = genName(node, currentBlock);
     auto childNode = (*node)->children.begin();
-    lhs = child[0]->genIr(childNode, currentBlock);
+    lhs = child[0].genIr(childNode, currentBlock);
     childNode++;
-    rhs = child[1]->genIr(childNode, currentBlock);
+    rhs = child[1].genIr(childNode, currentBlock);
     tac *in = new expression("-", lhs.value, rhs.value, name);
     currentBlock->instructions.push_back(in);
     return retStruct(name, nullptr);
 }
 
 // add-expression
-retStruct addExpression::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+retStruct irNode::addExpression(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     name = genName(node, currentBlock);
     auto childNode = (*node)->children.begin();
-    lhs = child[0]->genIr(childNode, currentBlock);
+    lhs = child[0].genIr(childNode, currentBlock);
     childNode++;
-    rhs = child[1]->genIr(childNode, currentBlock);
+    rhs = child[1].genIr(childNode, currentBlock);
     tac *in = new expression("+", lhs.value, rhs.value, name);
     currentBlock->instructions.push_back(in);
     return retStruct(name, nullptr);
 }
 
 // boolean-expression
-retStruct booleanExpression::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+retStruct irNode::booleanExpression(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     auto childNode = (*node)->children.begin();
-    lhs = child[0]->genIr(childNode, currentBlock);
+    lhs = child[0].genIr(childNode, currentBlock);
     childNode++;
-    rhs = child[1]->genIr(childNode, currentBlock);
+    rhs = child[1].genIr(childNode, currentBlock);
     tac *in = new expression((*node)->type, lhs.value, rhs.value, name);
     currentBlock->instructions.push_back(in);
     return retStruct(name, nullptr); 
 }
 
 // if-else
-retStruct ifElse::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+retStruct irNode::ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     BBlock *headBlock = new BBlock(genBlkName());
-    booleanExpression *bExpression = new booleanExpression;
-    bExpression->genIr((*node)->children.begin(), currentBlock);
-    BBlock *trueBlock = 
+    irNode bExpression("booleanExpression");
+    bExpression.genIr((*node)->children.begin(), currentBlock);
+    BBlock *trueBlock = new BBlock(genBlkName());
 
 }
 
 // identifier
-retStruct identifier::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+retStruct irNode::identifier(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     return retStruct((*node)->value, nullptr);
 }
 
 // integer-literal
-retStruct integer::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+retStruct irNode::integer(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     return retStruct((*node)->value, nullptr);
 }
 
 // temp
-retStruct temp::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override
+retStruct irNode::temp(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     std::string tempName = "_" + std::to_string(currentBlock->tempCount);
     currentBlock->tempCount++;
