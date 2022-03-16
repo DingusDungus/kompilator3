@@ -42,13 +42,14 @@ public:
     void printPostOrder();
     Node* searchTree(Node* root, std::string value);
 
-    void generate_tree(irNode* node) {
+	// seg faults REEEEEEEEEEEEEEEE
+    void generate_tree() {
 	    std::ofstream outStream;
 	    outStream.open("irTree.dot");
 
 	    int count = 0;
 	    outStream << "digraph {" << std::endl;
-	    generate_tree_content(count, &outStream, node);
+	    generate_tree_content(count, &outStream, iRoot);
 	    outStream << "}" << std::endl;
 	    outStream.close();
 

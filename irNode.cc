@@ -5,6 +5,7 @@ int blockNr = 0;
 // base-class
 irNode::irNode() {}
 irNode::irNode(std::string type) : type(type) {}
+irNode::irNode(std::string type, std::string name) : type(type), name(name) {}
 
 irNode::~irNode() {}
 
