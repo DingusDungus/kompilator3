@@ -75,9 +75,9 @@ retStruct irNode::subExpression(std::_List_iterator<Node *> node, BBlock *curren
 {
     name = genName(node, currentBlock);
     auto childNode = (*node)->children.begin();
-    lhs = child[0].genIr(childNode, currentBlock);
+    lhs = child[0]->genIr(childNode, currentBlock);
     childNode++;
-    rhs = child[1].genIr(childNode, currentBlock);
+    rhs = child[1]->genIr(childNode, currentBlock);
     tac *in = new expression("-", lhs.value, rhs.value, name);
     currentBlock->instructions.push_back(in);
     return retStruct(name, nullptr);
@@ -88,9 +88,9 @@ retStruct irNode::addExpression(std::_List_iterator<Node *> node, BBlock *curren
 {
     name = genName(node, currentBlock);
     auto childNode = (*node)->children.begin();
-    lhs = child[0].genIr(childNode, currentBlock);
+    lhs = child[0]->genIr(childNode, currentBlock);
     childNode++;
-    rhs = child[1].genIr(childNode, currentBlock);
+    rhs = child[1]->genIr(childNode, currentBlock);
     tac *in = new expression("+", lhs.value, rhs.value, name);
     currentBlock->instructions.push_back(in);
     return retStruct(name, nullptr);
@@ -100,9 +100,9 @@ retStruct irNode::addExpression(std::_List_iterator<Node *> node, BBlock *curren
 retStruct irNode::booleanExpression(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     auto childNode = (*node)->children.begin();
-    lhs = child[0].genIr(childNode, currentBlock);
+    lhs = child[0]->genIr(childNode, currentBlock);
     childNode++;
-    rhs = child[1].genIr(childNode, currentBlock);
+    rhs = child[1]->genIr(childNode, currentBlock);
     tac *in = new expression((*node)->type, lhs.value, rhs.value, name);
     currentBlock->instructions.push_back(in);
     return retStruct(name, nullptr); 
@@ -112,12 +112,12 @@ retStruct irNode::booleanExpression(std::_List_iterator<Node *> node, BBlock *cu
 retStruct irNode::ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     auto childNode = (*node)->children.begin();
-    child[0].genIr((*node)->children.begin(), currentBlock);
+    child[0]->genIr((*node)->children.begin(), currentBlock);
     BBlock *trueBlock = new BBlock(genBlkName());
-    lhs = child[1].genIr(childNode, trueBlock);
+    lhs = child[1]->genIr(childNode, trueBlock);
     childNode++;
     BBlock *falseBlock = new BBlock(genBlkName());
-    rhs = child[2].genIr(childNode, falseBlock);
+    rhs = child[2]->genIr(childNode, falseBlock);
     BBlock *joinBlock = new BBlock(genBlkName());
 
     currentBlock->trueExit = trueBlock;

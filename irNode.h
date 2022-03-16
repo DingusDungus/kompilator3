@@ -31,13 +31,15 @@ private:
 public:
     irNode();
     irNode(std::string type);
+    irNode(std::string type, std::string name);
     ~irNode();
 
-    std::vector<irNode> child;
+    std::vector<irNode*> child;
     std::string name;
     retStruct lhs;
     retStruct rhs;
     std::string type;
+    int id;
 
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock);
 
