@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stack>
 
 #include "tac.h"
 #include "Node.h"
@@ -36,6 +37,7 @@ public:
     void postOrderTraversal(Node *leaf);
     irNode* parseNodes(Node* ptr);
     void printPostOrder();
+    Node* searchTree(Node* root, std::string value);
 };
 
 #endif

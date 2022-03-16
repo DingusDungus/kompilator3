@@ -43,6 +43,28 @@ void CFG::buildCFG()
     }
 }
 
+Node* CFG::searchTree(Node* root, std::string value)
+{
+        if (root == nullptr) {
+        return nullptr;
+    }
+    std::stack<Node*> s;
+    s.push(root);
+
+    while (!s.empty()) {
+        Node* current = s.top();
+        if (current->value == value) {
+            return current;
+        }
+        s.pop();
+
+        for (auto i = current->children.begin(); i != current->children.end(); i++) {
+            s.push((*i));
+        }
+    }
+    return nullptr;
+}
+
 irNode* parseNodes(Node* ptr)
 {
     if (ptr->type == "AddOP") {
