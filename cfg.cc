@@ -110,12 +110,12 @@ irNode* parseNodes(Node* ptr)
 
     }
     // Variables
-    else if (ptr->type == "Identifier") {
-        irNode node("identifier");
-    }
-    else if (ptr->type == "IntegerLiteral") {
-        irNode node("integer");
-    }
+    // else if (ptr->type == "Identifier") {
+    //     irNode node("identifier");
+    // }
+    // else if (ptr->type == "IntegerLiteral") {
+    //     irNode node("integer");
+    // }
     return nullptr;
 }
 

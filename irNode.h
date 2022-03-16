@@ -14,6 +14,7 @@ struct retStruct
     retStruct() : bblock(nullptr) {}
     retStruct(std::string value) : bblock(nullptr), value(value) {}
     retStruct(std::string value, BBlock *bblock) : bblock(bblock), value(value) {}
+    retStruct(BBlock *bblock) : bblock(bblock), value("") {}
 };
 
 class irNode
