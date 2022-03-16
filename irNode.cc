@@ -11,17 +11,13 @@ irNode::~irNode() {}
 
 retStruct irNode::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
-    if (type == "subExpression")
+    if (type == "assignExpression")
     {
-        return subExpression(node, currentBlock);
+        return assignExpress(node, currentBlock);
     }
-    else if (type == "addExpression")
+    if (type == "expression")
     {
-        return addExpression(node, currentBlock);
-    }
-    else if (type == "booleanExpression")
-    {
-        return booleanExpression(node, currentBlock);
+        return express(node, currentBlock);
     }
     else if (type == "ifElse")
     {
@@ -41,13 +37,26 @@ retStruct irNode::genIr(std::_List_iterator<Node *> node, BBlock *currentBlock)
     }
 }
 
-std::string irNode::genName(std::_List_iterator<Node *> node, BBlock *currentBlk)
+std::string irNode::genNameAssign(std::_List_iterator<Node *> node, BBlock *currentBlk)
 {
     node--;
     if ((*node)->type == "IdentifierExpression")
     {
         auto child = (*node)->children.begin();
         return (*child)->value;
+    }
+    else
+    {
+        return genTempName(currentBlk);
+    }
+}
+
+std::string irNode::genName(std::_List_iterator<Node *> node, BBlock *currentBlk)
+{
+    Node *parent = (*node)->parent_node;
+    if (parent->type == "IF_ElseStatement" || parent->type == "WhileStatement" || parent->type == "SystemOutPrintStatement")
+    {
+        return parent->type;
     }
     else
     {
@@ -71,42 +80,30 @@ std::string irNode::genBlkName()
     return blkName;
 }
 
-// sub-expression
-retStruct irNode::subExpression(std::_List_iterator<Node *> node, BBlock *currentBlock)
+// assign-expression
+retStruct irNode::assignExpress(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
-    name = genName(node, currentBlock);
-    auto childNode = (*node)->children.begin();
-    lhs = child[0]->genIr(childNode, currentBlock);
-    childNode++;
-    rhs = child[1]->genIr(childNode, currentBlock);
-    tac *in = new expression("-", lhs.value, rhs.value, name);
-    currentBlock->instructions.push_back(in);
-    return retStruct(name, nullptr);
-}
-
-// add-expression
-retStruct irNode::addExpression(std::_List_iterator<Node *> node, BBlock *currentBlock)
-{
-    name = genName(node, currentBlock);
-    auto childNode = (*node)->children.begin();
-    lhs = child[0]->genIr(childNode, currentBlock);
-    childNode++;
-    rhs = child[1]->genIr(childNode, currentBlock);
-    tac *in = new expression("+", lhs.value, rhs.value, name);
-    currentBlock->instructions.push_back(in);
-    return retStruct(name, nullptr);
-}
-
-// boolean-expression
-retStruct irNode::booleanExpression(std::_List_iterator<Node *> node, BBlock *currentBlock)
-{
+    name = genNameAssign(node, currentBlock);
     auto childNode = (*node)->children.begin();
     lhs = child[0]->genIr(childNode, currentBlock);
     childNode++;
     rhs = child[1]->genIr(childNode, currentBlock);
     tac *in = new expression((*node)->type, lhs.value, rhs.value, name);
     currentBlock->instructions.push_back(in);
-    return retStruct(name, nullptr); 
+    return retStruct(name, nullptr);
+}
+
+// expression without assign
+retStruct irNode::express(std::_List_iterator<Node *> node, BBlock *currentBlock)
+{
+    name = genNameAssign(node, currentBlock);
+    auto childNode = (*node)->children.begin();
+    lhs = child[0]->genIr(childNode, currentBlock);
+    childNode++;
+    rhs = child[1]->genIr(childNode, currentBlock);
+    tac *in = new expression((*node)->type, lhs.value, rhs.value, name);
+    currentBlock->instructions.push_back(in);
+    return retStruct(name, nullptr);
 }
 
 // if-else
@@ -121,6 +118,9 @@ retStruct irNode::ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock)
     rhs = child[2]->genIr(childNode, falseBlock);
     BBlock *joinBlock = new BBlock(genBlkName());
 
+    tac *in = new expression("if-statement", lhs.value, rhs.value, name);
+    currentBlock->instructions.push_back(in);
+
     currentBlock->trueExit = trueBlock;
     currentBlock->falseExit = falseBlock;
 
@@ -134,13 +134,16 @@ retStruct irNode::ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock)
 retStruct irNode::whileStmt(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     auto childNode = (*node)->children.begin();
-    child[0].genIr(childNode, currentBlock);
+    child[0]->genIr(childNode, currentBlock);
     BBlock *trueBlock = new BBlock;
     childNode++;
-    child[1].genIr(childNode, trueBlock);
+    lhs = child[1]->genIr(childNode, trueBlock);
     BBlock *falseBlock = new BBlock;
     auto nextStmt = node++;
-    child[2].genIr(nextStmt, falseBlock);
+    rhs = child[2]->genIr(nextStmt, falseBlock);
+
+    tac *in = new expression("while-statement", lhs.value, rhs.value, name);
+    currentBlock->instructions.push_back(in);
 
     currentBlock->trueExit = trueBlock;
     trueBlock->trueExit = currentBlock;
@@ -157,6 +160,12 @@ retStruct irNode::identifier(std::_List_iterator<Node *> node, BBlock *currentBl
 
 // integer-literal
 retStruct irNode::integer(std::_List_iterator<Node *> node, BBlock *currentBlock)
+{
+    return retStruct((*node)->value, nullptr);
+}
+
+// boolean-literal
+retStruct irNode::boolean(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
     return retStruct((*node)->value, nullptr);
 }

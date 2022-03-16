@@ -20,9 +20,9 @@ struct retStruct
 class irNode
 {
 private:
-    retStruct booleanExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
-    retStruct subExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
-    retStruct addExpression(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct boolean(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct express(std::_List_iterator<Node *> node, BBlock *currentBlock);
+    retStruct assignExpress(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct whileStmt(std::_List_iterator<Node *> node, BBlock *currentBlock);
     retStruct identifier(std::_List_iterator<Node *> node, BBlock *currentBlock);
@@ -35,7 +35,7 @@ public:
     irNode(std::string type, std::string name);
     ~irNode();
 
-    std::vector<irNode*> child;
+    std::vector<irNode *> child;
     std::string name;
     retStruct lhs;
     retStruct rhs;
@@ -44,6 +44,7 @@ public:
 
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock);
 
+    std::string genNameAssign(std::_List_iterator<Node *> node, BBlock *currentBlk);
     std::string genName(std::_List_iterator<Node *> node, BBlock *currentBlk);
     std::string genTempName(BBlock *currentBlk);
     std::string genBlkName();
