@@ -129,6 +129,25 @@ retStruct irNode::ifElse(std::_List_iterator<Node *> node, BBlock *currentBlock)
     return retStruct("ifElse-joinBlock", joinBlock);
 }
 
+// while
+retStruct irNode::whileStmt(std::_List_iterator<Node *> node, BBlock *currentBlock)
+{
+    auto childNode = (*node)->children.begin();
+    child[0].genIr(childNode, currentBlock);
+    BBlock *trueBlock = new BBlock;
+    childNode++;
+    child[1].genIr(childNode, trueBlock);
+    BBlock *falseBlock = new BBlock;
+    auto nextStmt = node++;
+    child[2].genIr(nextStmt, falseBlock);
+
+    currentBlock->trueExit = trueBlock;
+    trueBlock->trueExit = currentBlock;
+    currentBlock->falseExit = falseBlock;
+
+    return retStruct("while-statement", falseBlock);
+}
+
 // identifier
 retStruct irNode::identifier(std::_List_iterator<Node *> node, BBlock *currentBlock)
 {
