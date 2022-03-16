@@ -31,5 +31,14 @@
 *.out
 *.app
 *compiler
+
+# Extra
 tree.pdf
 tree.dot
+irTree.dot
+*.cache
+compile_commands.json
+lex.yy.c
+parser.tab.cc
+parser.tab.hh
+stack.hh
