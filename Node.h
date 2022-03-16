@@ -16,6 +16,7 @@ public:
 	int id;
 	string type, value;
 	int rowNr;
+	bool visited = false;
 	Node* parent_node;
 	list<Node*> children;
 	Node(string t, string v) : type(t), value(v) {}
