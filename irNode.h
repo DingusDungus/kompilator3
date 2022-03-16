@@ -45,6 +45,7 @@ class booleanExpression : public irNode
 
 class subExpression : public irNode
 {
+    public:
     subExpression() { type = "SUB"; }
     ~subExpression() override {}
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
@@ -52,6 +53,7 @@ class subExpression : public irNode
 
 class addExpression : public irNode
 {
+    public:
     addExpression() { type = "ADD"; }
     ~addExpression() override {}
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
@@ -59,6 +61,7 @@ class addExpression : public irNode
 
 class ifElse : public irNode
 {
+    public:
     ifElse() { type = "ifElse"; }
     ~ifElse() override {}
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
@@ -66,6 +69,7 @@ class ifElse : public irNode
 
 class identifier : public irNode
 {
+    public:
     ~identifier() override {}
     std::string value;
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
@@ -73,7 +77,7 @@ class identifier : public irNode
 
 class integer : public irNode
 {
-
+    public:
     ~integer() override {}
     std::string value;
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
@@ -81,6 +85,7 @@ class integer : public irNode
 
 class temp : public irNode
 {
+    public:
     ~temp() override {}
     retStruct genIr(std::_List_iterator<Node *> node, BBlock *currentBlock) override;
 };
