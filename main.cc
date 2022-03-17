@@ -41,17 +41,9 @@ int main(int argc, char **argv)
     return 1;
   }
   CFG cfgGraph(root);
-  // cfgGraph.buildCFG();
-  cfgGraph.postOrderTraversal(root);
-  cfgGraph.printPostOrder();
   cfgGraph.buildIrNodeAST(root);
-  // cfgGraph.generate_tree();
-  Node* result = cfgGraph.searchTree(root, "BigBoyClass");
-  if (result != nullptr){
-    std::cout << "Search result: " << result->type << " : " << result->value << std::endl;
-  }else {
-    std::cout << "Search result: nothing found" << std::endl;
-  }
+  cfgGraph.buildCFG();
+  cfgGraph.printBlocks();
 
   return 0;
 }

@@ -14,7 +14,7 @@ CFG::CFG()
     root = new BBlock(genBlkName());
     currentBlk = root;
     nRoot = nullptr;
-    iRoot = nullptr;
+    iRoot = new irNode("connector");
 }
 
 CFG::CFG(Node *_root)
@@ -23,129 +23,140 @@ CFG::CFG(Node *_root)
     root = new BBlock(genBlkName());
     currentBlk = root;
     nRoot = _root;
-    iRoot = nullptr;
-}
-
-bool CFG::isLeafNode(Node *ptr)
-{
-    if (ptr->type == "IntegerLiteral" || ptr->type == "BooleanExpression" || ptr->type == "Identifier")
-    {
-        return true;
-    }
-    return false;
-}
-
-void CFG::buildIrNodeAST(Node* node, irNode* iNode)
-{
-    if (node == nullptr) {
-        return;
-    }
-    iNode = new irNode(node->type, node->value);
-    for (auto i = node->children.begin(); i != node->children.end(); i++) {
-        irNode* temp = nullptr;
-        iNode->child.push_back(temp);
-        buildIrNodeAST((*i), temp);
-    }
-}
-
-void CFG::buildIrNodeAST(Node* node)
-{
-    // start recursion
-    buildIrNodeAST(nRoot,iRoot);
+    iRoot = new irNode("connector", nRoot);
 }
 
 void CFG::buildCFG()
 {
-
+    iRoot->genIr(root);
 }
 
-Node* CFG::searchTree(Node* root, std::string value)
+Node *CFG::searchTree(Node *root, std::string value)
 {
-        if (root == nullptr) {
+    if (root == nullptr)
+    {
         return nullptr;
     }
-    std::stack<Node*> s;
+    std::stack<Node *> s;
     s.push(root);
 
-    while (!s.empty()) {
-        Node* current = s.top();
-        if (current->value == value) {
+    while (!s.empty())
+    {
+        Node *current = s.top();
+        if (current->value == value)
+        {
             return current;
         }
         s.pop();
 
-        for (auto i = current->children.begin(); i != current->children.end(); i++) {
+        for (auto i = current->children.begin(); i != current->children.end(); i++)
+        {
             s.push((*i));
         }
     }
     return nullptr;
 }
 
-irNode* parseNodes(Node* ptr)
+bool CFG::expressionBool(Node *ptr)
 {
-    if (ptr->type == "AddOP") {
-        irNode node("addExpression");
+    if (ptr->type == "AndOP" || ptr->type == "OrOP" || ptr->type == "LesserOP" || ptr->type == "GreaterOP" || ptr->type == "EqualsOP" || ptr->type == "AddOP" || ptr->type == "SubOP" || ptr->type == "MultOP" || ptr->type == "DivOP" || ptr->type == "ArrayIndexAccessExpression" || ptr->type == "newIntArray" || ptr->type == "newIdentifier" || ptr->type == "NotOP")
+    {
+        return true;
     }
-    else if (ptr->type == "SubOP") {
-        irNode node("subExpression");
-    }
-    else if (ptr->type == "MultOP") {
-        
-    }
-    else if (ptr->type == "DivOP") {
+    return false;
+}
 
+irNode *CFG::expression(Node *ptr)
+{
+    if (ptr->type == "AndOP" || ptr->type == "OrOP" || ptr->type == "LesserOP" || ptr->type == "GreaterOP" || ptr->type == "EqualsOP" || ptr->type == "AddOP" || ptr->type == "SubOP" || ptr->type == "MultOP" || ptr->type == "DivOP")
+    {
+        return new irNode("expression", ptr);
     }
-    else if (ptr->type == "AndOP") {
-
+    else if (ptr->type == "NotOP")
+    {
+        return new irNode("notOp", ptr);
     }
-    else if (ptr->type == "OrOP") {
-
+    else if (ptr->type == "ArrayIndexAccessExpression")
+    {
+        return new irNode("ArrayIndexAccess", ptr);
     }
-    else if (ptr->type == "LesserOP") {
-
+    else if (ptr->type == "newIntArray")
+    {
+        return new irNode("newIntArray", ptr);
     }
-    else if (ptr->type == "GreaterOP") {
-
+    else if (ptr->type == "newIdentifier")
+    {
+        return new irNode("newIdentifier", ptr);
     }
-    else if (ptr->type == "EqualsOP") {
+    return nullptr;
+}
 
+void CFG::buildIrNodeAST(Node *node, irNode *iNode)
+{
+    if (node == nullptr)
+    {
+        return;
     }
-    else if (ptr->type == "ArrayIndexAccessExpression") {
-
+    for (auto i = node->children.begin(); i != node->children.end(); i++)
+    {
+        irNode *newNode = parseNodes(node);
+        if (newNode != nullptr)
+        {
+            iNode->child.push_back(newNode);
+            buildIrNodeAST((*i), newNode);
+        }
+        else
+        {
+            buildIrNodeAST((*i), iNode);
+        }
     }
-    else if (ptr->type == "IdentifierExpression") {
+}
 
+void CFG::buildIrNodeAST(Node *node)
+{
+    // start recursion
+    buildIrNodeAST(nRoot, iRoot);
+}
+
+irNode *CFG::parseNodes(Node *ptr)
+{
+    if (ptr->type == "StatementList" || ptr->type == "ExpressionList")
+    {
+        return new irNode("connector", ptr);
     }
-    else if (ptr->type == "ThisExpression") {
-
+    else if (expressionBool(ptr))
+    {
+        return expression(ptr);
     }
-    else if (ptr->type == "newIntArray") {
-
-    }
-    else if (ptr->type == "newIdentifier") {
-
-    }
-    else if (ptr->type == "NotOP") {
-
-    }
-    else if (ptr->type == "Expression") {
-
+    else if (ptr->type == "Identifier")
+    {
+        return new irNode("identifier", ptr);
     }
     // Statements
-    else if (ptr->type == "SystemOutPrintStatement") {
-
+    else if (ptr->type == "SystemOutPrintStatement")
+    {
     }
-    else if (ptr->type == "AssignStatement") {
-
+    else if (ptr->type == "AssignStatement")
+    {
+        return new irNode("assignExpression", ptr);
     }
-    else if (ptr->type == "WhileStatement") {
-
+    else if (ptr->type == "WhileStatement")
+    {
+        return new irNode("assignExpression", ptr);
     }
-    else if (ptr->type == "IF_ElseStatement") {
-
+    else if (ptr->type == "IF_ElseStatement")
+    {
+        return new irNode("ifElse", ptr);
     }
-    else if (ptr->type == "ArrayIndexAssignStatement") {
-
+    else if (ptr->type == "WhileStatement")
+    {
+        return new irNode("whileStmt", ptr);
+    }
+    else if (ptr->type == "ArrayIndexAssignStatement")
+    {
+    }
+    else if (ptr->type == "methodCall")
+    {
     }
     // Variables
     // else if (ptr->type == "Identifier") {
@@ -159,11 +170,13 @@ irNode* parseNodes(Node* ptr)
 
 void CFG::postOrderTraversal(Node *leaf)
 {
-   if(leaf == nullptr) {
+    if (leaf == nullptr)
+    {
         return;
     }
 
-    for (auto i = leaf->children.begin(); i != leaf->children.end(); i++) {
+    for (auto i = leaf->children.begin(); i != leaf->children.end(); i++)
+    {
         postOrderTraversal((*i));
     }
 
@@ -174,9 +187,44 @@ void CFG::postOrderTraversal(Node *leaf)
 void CFG::printPostOrder()
 {
     std::cout << "--- Printing post order ---" << std::endl;
-    for(int i = 0; i < postOrderList.size(); i++)
+    for (int i = 0; i < postOrderList.size(); i++)
     {
         std::cout << postOrderList[i] << std::endl;
     }
 }
 
+void CFG::printBlocks()
+{
+    BBlock *ptr = root;
+    std::cout << ptr->name << std::endl;
+    for (int i = 0; i < ptr->instructions.size(); i++)
+    {
+        ptr->instructions[i]->dump();
+    }
+    std::cout << std::endl;
+    if (ptr->trueExit != nullptr)
+    {
+        printBlocksRec(ptr->trueExit);
+    }
+    else if (ptr->falseExit)
+    {
+        printBlocksRec(ptr->falseExit);
+    }
+}
+
+void CFG::printBlocksRec(BBlock *ptr)
+{
+    for (int i = 0; i < ptr->instructions.size(); i++)
+    {
+        ptr->instructions[i]->dump();
+    }
+    std::cout << std::endl;
+    if (ptr->trueExit != nullptr)
+    {
+        printBlocksRec(ptr->trueExit);
+    }
+    else if (ptr->falseExit)
+    {
+        printBlocksRec(ptr->falseExit);
+    }
+}

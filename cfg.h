@@ -20,9 +20,8 @@ private:
     BBlock *currentBlk;
     std::vector<tac *> temp;
     std::string genBlkName();
-    bool isExpressionHeadNode(Node *ptr);
-    bool isLeafNode(Node *ptr);
-    bool isUnaryHeadNode(Node *ptr);
+    irNode *expression(Node *);
+    bool expressionBool(Node *);
     std::string tacExpression(Node *ptr);
 
     Node *nRoot;
@@ -36,11 +35,12 @@ public:
     void buildIrNodeAST(Node* node, irNode* iNode);
     void buildIrNodeAST(Node* node);
     void buildCFG();
-    void buildCFGrec(Node *ptr);
     void postOrderTraversal(Node *leaf);
     irNode* parseNodes(Node* ptr);
     void printPostOrder();
     Node* searchTree(Node* root, std::string value);
+    void printBlocks();
+    void printBlocksRec(BBlock *ptr);
 
 	// seg faults REEEEEEEEEEEEEEEE
     void generate_tree() {
