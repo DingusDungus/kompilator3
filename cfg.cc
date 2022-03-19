@@ -126,37 +126,38 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (expressionBool(ptr))
     {
-        return expression(ptr);
+        //return new irNode("expression", ptr);
     }
-    else if (ptr->type == "Identifier")
+    else if (ptr->type == "Identifier" || ptr->type == "")
     {
         return new irNode("identifier", ptr);
     }
     // Statements
     else if (ptr->type == "SystemOutPrintStatement")
     {
+        return nullptr;
     }
     else if (ptr->type == "AssignStatement")
     {
         return new irNode("assignExpression", ptr);
     }
-    else if (ptr->type == "WhileStatement")
-    {
-        return new irNode("assignExpression", ptr);
-    }
     else if (ptr->type == "IF_ElseStatement")
     {
-        return new irNode("ifElse", ptr);
+        //return new irNode("ifElse", ptr);
+        return nullptr;
     }
     else if (ptr->type == "WhileStatement")
     {
-        return new irNode("whileStmt", ptr);
+        //return new irNode("whileStmt", ptr);
+        return nullptr;
     }
     else if (ptr->type == "ArrayIndexAssignStatement")
     {
+        return nullptr;
     }
     else if (ptr->type == "methodCall")
     {
+        return nullptr;
     }
     // Variables
     // else if (ptr->type == "Identifier") {

@@ -20,21 +20,21 @@ struct retStruct
 class irNode
 {
 private:
-    retStruct connector(BBlock *currentBlock);
-    retStruct boolean(BBlock *currentBlock);
-    retStruct express(BBlock *currentBlock);
-    retStruct assignExpress(BBlock *currentBlock);
-    retStruct ifElse(BBlock *currentBlock);
-    retStruct whileStmt(BBlock *currentBlock);
-    retStruct identifier(BBlock *currentBlock);
-    retStruct integer(BBlock *currentBlock);
-    retStruct ArrayIndexAccess(BBlock *currentBlock);
-    retStruct newIntArray(BBlock *currentBlock);
-    retStruct newIdentifier(BBlock *currentBlock);
-    retStruct notOp(BBlock *currentBlock);
-    retStruct methodCall(BBlock *currentBlock);
+    retStruct *connector(BBlock *currentBlock);
+    retStruct *boolean(BBlock *currentBlock);
+    retStruct *express(BBlock *currentBlock);
+    retStruct *assignExpress(BBlock *currentBlock);
+    retStruct *ifElse(BBlock *currentBlock);
+    retStruct *whileStmt(BBlock *currentBlock);
+    retStruct *identifier(BBlock *currentBlock);
+    retStruct *integer(BBlock *currentBlock);
+    retStruct *ArrayIndexAccess(BBlock *currentBlock);
+    retStruct *newIntArray(BBlock *currentBlock);
+    retStruct *newIdentifier(BBlock *currentBlock);
+    retStruct *notOp(BBlock *currentBlock);
+    retStruct *methodCall(BBlock *currentBlock);
 
-    retStruct temp(BBlock *currentBlock);
+    retStruct *temp(BBlock *currentBlock);
 
     Node *headNode;
 
@@ -46,13 +46,13 @@ public:
 
     std::vector<irNode *> child;
     std::string name;
-    retStruct lhs;
-    retStruct rhs;
+    retStruct *lhs;
+    retStruct *rhs;
     std::string op;
     std::string type;
     int id;
 
-    retStruct genIr(BBlock *currentBlock);
+    retStruct *genIr(BBlock *currentBlock);
 
     std::string genNameAssign(BBlock *currentBlk);
     std::string genName(BBlock *currentBlk);

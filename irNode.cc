@@ -9,7 +9,7 @@ irNode::irNode(std::string type, Node *node) : type(type), headNode(node) {}
 
 irNode::~irNode() {}
 
-retStruct irNode::genIr(BBlock *currentBlock)
+retStruct *irNode::genIr(BBlock *currentBlock)
 {
     std::cout << type << std::endl;
     if (type == "connector")
@@ -91,51 +91,66 @@ std::string irNode::genBlkName()
 }
 
 // Connector
-retStruct irNode::connector(BBlock *currentBlock)
+retStruct *irNode::connector(BBlock *currentBlock)
 {
     for (int i = 0; i < child.size(); i++)
     {
         child[i]->genIr(currentBlock);
     }
-    return retStruct("Connector", nullptr);
+    return new retStruct("Connector", nullptr);
 }
 
 // assign-expression
-retStruct irNode::assignExpress(BBlock *currentBlock)
+retStruct *irNode::assignExpress(BBlock *currentBlock)
 {
     name = genNameAssign(currentBlock);
-    lhs = child[0]->genIr(currentBlock);
-    rhs = child[1]->genIr(currentBlock);
-    tac *in = new expression(headNode->type, lhs.value, rhs.value, name);
+    if (child.size() > 0)
+    {
+        lhs = child[0]->genIr(currentBlock);
+    }
+    else if (child.size() > 1)
+    {
+        rhs = child[1]->genIr(currentBlock);
+    }
+    tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
-    return retStruct(name, nullptr);
+    return new retStruct(name, nullptr);
 }
 
 // expression without assign
-retStruct irNode::express(BBlock *currentBlock)
+retStruct *irNode::express(BBlock *currentBlock)
 {
     name = genNameAssign(currentBlock);
-    lhs = child[0]->genIr(currentBlock);
-    rhs = child[1]->genIr(currentBlock);
-    tac *in = new expression(headNode->type, lhs.value, rhs.value, name);
+    if (child.size() > 0)
+    {
+        lhs = child[0]->genIr(currentBlock);
+    }
+    else if (child.size() > 1)
+    {
+        rhs = child[1]->genIr(currentBlock);
+    }
+    tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
-    return retStruct(name, nullptr);
+    return new retStruct(name, nullptr);
 }
 
 // notOp
-retStruct irNode::notOp(BBlock *currentBlock)
+retStruct *irNode::notOp(BBlock *currentBlock)
 {
     name = "notOp";
-    lhs = retStruct("(");
-    rhs = retStruct(")");
-    op = child[0]->genIr(currentBlock).value;
-    tac *in = new expression(op, lhs.value, rhs.value, name);
+    lhs = new retStruct("(");
+    rhs = new retStruct(")");
+    if (child[0] != nullptr)
+    {
+        op = child[0]->genIr(currentBlock)->value;
+    }
+    tac *in = new expression(op, lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
-    return retStruct(name, nullptr);
+    return new retStruct(name, nullptr);
 }
 
 // if-else
-retStruct irNode::ifElse(BBlock *currentBlock)
+retStruct *irNode::ifElse(BBlock *currentBlock)
 {
     child[0]->genIr(currentBlock);
     BBlock *trueBlock = new BBlock(genBlkName());
@@ -144,7 +159,7 @@ retStruct irNode::ifElse(BBlock *currentBlock)
     rhs = child[2]->genIr(falseBlock);
     BBlock *joinBlock = new BBlock(genBlkName());
 
-    tac *in = new expression("if-statement", lhs.value, rhs.value, name);
+    tac *in = new expression("if-statement", lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
 
     currentBlock->trueExit = trueBlock;
@@ -153,11 +168,11 @@ retStruct irNode::ifElse(BBlock *currentBlock)
     trueBlock->trueExit = joinBlock;
     falseBlock->trueExit = joinBlock;
 
-    return retStruct("ifElse-joinBlock", joinBlock);
+    return new retStruct("ifElse-joinBlock", joinBlock);
 }
 
 // while
-retStruct irNode::whileStmt(BBlock *currentBlock)
+retStruct *irNode::whileStmt(BBlock *currentBlock)
 {
     child[0]->genIr(currentBlock);
     BBlock *trueBlock = new BBlock;
@@ -165,38 +180,38 @@ retStruct irNode::whileStmt(BBlock *currentBlock)
     BBlock *falseBlock = new BBlock;
     rhs = child[2]->genIr(falseBlock);
 
-    tac *in = new expression("while-statement", lhs.value, rhs.value, name);
+    tac *in = new expression("while-statement", lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
 
     currentBlock->trueExit = trueBlock;
     trueBlock->trueExit = currentBlock;
     currentBlock->falseExit = falseBlock;
 
-    return retStruct("while-statement", falseBlock);
+    return new retStruct("while-statement", falseBlock);
 }
 
 // identifier
-retStruct irNode::identifier(BBlock *currentBlock)
+retStruct *irNode::identifier(BBlock *currentBlock)
 {
-    return retStruct(headNode->value, nullptr);
+    return new retStruct(headNode->value, nullptr);
 }
 
 // integer-literal
-retStruct irNode::integer(BBlock *currentBlock)
+retStruct *irNode::integer(BBlock *currentBlock)
 {
-    return retStruct(headNode->value, nullptr);
+    return new retStruct(headNode->value, nullptr);
 }
 
 // boolean-literal
-retStruct irNode::boolean(BBlock *currentBlock)
+retStruct *irNode::boolean(BBlock *currentBlock)
 {
-    return retStruct(headNode->value, nullptr);
+    return new retStruct(headNode->value, nullptr);
 }
 
 // temp
-retStruct irNode::temp(BBlock *currentBlock)
+retStruct *irNode::temp(BBlock *currentBlock)
 {
     std::string tempName = "_" + std::to_string(currentBlock->tempCount);
     currentBlock->tempCount++;
-    return retStruct(tempName, nullptr);
+    return new retStruct(tempName, nullptr);
 }
