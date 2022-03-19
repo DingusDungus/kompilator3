@@ -1,9 +1,7 @@
-#Så vi måste ta bort alla onödiga saker som `()` och `{}` eftersom trädet hierarchy med nordernas barn osv redan ger den informationen.
+## Vad som är gjort!
 
-#Sen ska vi inte heller ha tex `[]` utan vi kan ersätta det med en "ArrayAccess" node som har det expression som finns inuti `[]` som sitt child
+Ok så det som är gjort såhär långt är att jag har arbetat på parseNodes klassen och lagt in så den försöker genenerar ett cfg då buildCFG() nu kallas på i main efter vi försökt generera ett irTräd. Alla nodes är inte insatta i if-satserna än så vissa hjälpfunktioner tror jag inte kallas på fullt ut. Jag har i princip försökt bygga upp ett system där irNodes skapas och läggs till som barn och beroende på vad för nod ges det olika types i formen av strängen som läggs in i konstruktorn. irNodes har nu även istället en Node * pekare som läggs in med konstruktorn som kan accessas genom headNode i klassen irNode och en iterator behöver inte längre passeras i genIr utan finns redan. Det finns nu två typer av expression, assignExpress och express, assignExpress är till för att få identifier namnet på en assignStatement, medan express är till för att generellt parsa en expression o skapa TACs från den. While statements borde vara färdig, även if-statements i irNodes funktionerna.
 
-#För typen "int[]" vid en declaration så gör vi bara en node som heter "intergerArray"
+# Det som behövs göras!!!
 
-#Sen måste vi också fixa Expression precedence så att multiplikation sker före addition osv. Han har tydligen länkat i uppgiften ett dokument som förklarar hur man gör det i bison. För nu om vi har tex `Expression1 + Expression2` men Expression1 är `10*2` och Expression2 är `10+2` så egentligen `10*2+10+2` så borde Expression1 göras först innan något annat eftersom det är multiplikation. Men som vi har det nu utan någonting för att hantera precedence kommer den alltid göra det från höger oavsett. Så Expression2 körs alltid först.
-
-#Behöver inte heller ha semicolon ;
+För det första när man runnar programmet och kallar på en funktion jag skapat som heter printBlocks seggar det, men goalBlocket och det varkar som en till tac printas us, väldigt hmm vd som sker men det är iaf så långt jag kommit med att få det att fullt fungera. På andra sidan måste methodCalls fixas så även den funkar i irNodes klassen ofc. Annars är det att fortsätta jobba på parseNodes, ksk uppdatera logiken inuti de redan existerande hjälpfunktionerna då jag är osäker om de är fullt rätt. That's about it.
