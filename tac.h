@@ -11,7 +11,7 @@ public:
     bool lhsSet;
     void dump()
     {
-        printf("%s := %s %s %s", result, lhs, op, rhs);
+        std::cout << result << ":=" << lhs << op << rhs << std::endl;
     }
 };
 

@@ -43,7 +43,7 @@ int main(int argc, char **argv)
   CFG cfgGraph(root);
   cfgGraph.buildIrNodeAST(root);
   cfgGraph.buildCFG();
-  cfgGraph.printBlocks();
+  // cfgGraph.printBlocks();
 
   return 0;
 }

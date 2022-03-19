@@ -197,6 +197,11 @@ void CFG::printPostOrder()
 void CFG::printBlocks()
 {
     BBlock *ptr = root;
+    if (ptr == nullptr)
+    {
+        std::cout << "root was nullptr" << std::endl;
+        return;
+    }
     std::cout << ptr->name << std::endl;
     for (int i = 0; i < ptr->instructions.size(); i++)
     {
@@ -207,14 +212,20 @@ void CFG::printBlocks()
     {
         printBlocksRec(ptr->trueExit);
     }
-    else if (ptr->falseExit)
+    else if (ptr->falseExit != nullptr)
     {
         printBlocksRec(ptr->falseExit);
     }
+    return;
 }
 
 void CFG::printBlocksRec(BBlock *ptr)
 {
+    if (ptr == nullptr)
+    {
+        std::cout << "was nullptr" << std::endl;
+        return;
+    }
     for (int i = 0; i < ptr->instructions.size(); i++)
     {
         ptr->instructions[i]->dump();
@@ -224,8 +235,9 @@ void CFG::printBlocksRec(BBlock *ptr)
     {
         printBlocksRec(ptr->trueExit);
     }
-    else if (ptr->falseExit)
+    else if (ptr->falseExit != nullptr)
     {
         printBlocksRec(ptr->falseExit);
     }
+    return;
 }

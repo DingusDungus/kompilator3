@@ -19,12 +19,3 @@ class test {
         return true;
     }
 }
-
-class anything2
-{
-    int number;
-    public int hello(){
-        int number;
-        return 1;
-    }
-}

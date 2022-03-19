@@ -44,6 +44,10 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return temp(currentBlock);
     }
+    else
+    {
+        return new retStruct();
+    }
 }
 
 std::string irNode::genNameAssign(BBlock *currentBlk)
@@ -77,7 +81,7 @@ std::string irNode::genName(BBlock *currentBlk)
 std::string irNode::genTempName(BBlock *currentBlk)
 {
     {
-        std::string temp = "_+" + std::to_string(currentBlk->tempCount);
+        std::string temp = "_T" + std::to_string(currentBlk->tempCount);
         currentBlk->tempCount++;
         return temp;
     }
@@ -104,16 +108,32 @@ retStruct *irNode::connector(BBlock *currentBlock)
 retStruct *irNode::assignExpress(BBlock *currentBlock)
 {
     name = genNameAssign(currentBlock);
+    std::cout << "Nr of childs: " << child.size() << std::endl;
     if (child.size() > 0)
     {
+        std::cout << "child 0: " << child[0]->headNode->type << std::endl;
+        std::cout << "child 0: " << child[0]->headNode->value << std::endl;
         lhs = child[0]->genIr(currentBlock);
     }
     else if (child.size() > 1)
     {
         rhs = child[1]->genIr(currentBlock);
     }
+    std::cout << "Name: " << name << std::endl;
+    if (headNode == nullptr) {
+        std::cout << "head is null" << std::endl;
+    }
+    if (rhs == nullptr)
+    {
+        std::cout << "rhs is null" << std::endl;
+    }
+    if (lhs == nullptr)
+    {
+        std::cout << "lhs is null" << std::endl;
+    }
     tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
+    std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
     return new retStruct(name, nullptr);
 }
 
