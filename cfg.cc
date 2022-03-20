@@ -126,9 +126,9 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (expressionBool(ptr))
     {
-        //return new irNode("expression", ptr);
+        return new irNode("expression", ptr);
     }
-    else if (ptr->type == "Identifier" || ptr->type == "")
+    else if (ptr->type == "Identifier" || ptr->type == "newIdentifier")
     {
         return new irNode("identifier", ptr);
     }

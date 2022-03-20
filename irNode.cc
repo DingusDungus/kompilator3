@@ -52,17 +52,8 @@ retStruct *irNode::genIr(BBlock *currentBlock)
 
 std::string irNode::genNameAssign(BBlock *currentBlk)
 {
-    Node *parent = headNode->parent_node;
-    auto identifier = parent->children.begin();
-    if ((*identifier)->type == "IdentifierExpression")
-    {
-        auto child = (*identifier)->children.begin();
-        return (*child)->value;
-    }
-    else
-    {
-        return genTempName(currentBlk);
-    }
+    auto identifier = headNode->children.begin();
+    return (*identifier)->value;
 }
 
 std::string irNode::genName(BBlock *currentBlk)
@@ -120,7 +111,8 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
         rhs = child[1]->genIr(currentBlock);
     }
     std::cout << "Name: " << name << std::endl;
-    if (headNode == nullptr) {
+    if (headNode == nullptr)
+    {
         std::cout << "head is null" << std::endl;
     }
     if (rhs == nullptr)
