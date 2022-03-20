@@ -11,7 +11,7 @@ irNode::~irNode() {}
 
 retStruct *irNode::genIr(BBlock *currentBlock)
 {
-    std::cout << type << std::endl;
+    std::cout << "genIR_type: " << type << std::endl;
     if (type == "connector")
     {
         return connector(currentBlock);
@@ -46,7 +46,7 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     }
     else if (type == "printStmt")
     {
-        return temp(currentBlock);
+        return printStmt(currentBlock);
     }
     else
     {
@@ -96,6 +96,12 @@ std::string irNode::genBlkName()
     std::string blkName = "block_" + std::to_string(blockNr);
     blockNr++;
     return blkName;
+}
+
+// Connector
+retStruct *irNode::printStmt(BBlock *currentBlock)
+{
+    return new retStruct("printStmt", currentBlock);
 }
 
 // Connector

@@ -33,6 +33,7 @@ private:
     retStruct *newIdentifier(BBlock *currentBlock);
     retStruct *notOp(BBlock *currentBlock);
     retStruct *methodCall(BBlock *currentBlock);
+    retStruct *printStmt(BBlock *currentBlock);
 
     retStruct *temp(BBlock *currentBlock);
 
