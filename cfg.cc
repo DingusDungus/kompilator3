@@ -135,7 +135,7 @@ irNode *CFG::parseNodes(Node *ptr)
     // Statements
     else if (ptr->type == "SystemOutPrintStatement")
     {
-        return nullptr;
+        return new irNode("printStmt", ptr);
     }
     else if (ptr->type == "AssignStatement")
     {
@@ -143,13 +143,11 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (ptr->type == "IF_ElseStatement")
     {
-        //return new irNode("ifElse", ptr);
-        return nullptr;
+        return new irNode("ifElse", ptr);
     }
     else if (ptr->type == "WhileStatement")
     {
-        //return new irNode("whileStmt", ptr);
-        return nullptr;
+        return new irNode("whileStmt", ptr);
     }
     else if (ptr->type == "ArrayIndexAssignStatement")
     {
@@ -163,9 +161,9 @@ irNode *CFG::parseNodes(Node *ptr)
     // else if (ptr->type == "Identifier") {
     //     irNode node("identifier");
     // }
-    // else if (ptr->type == "IntegerLiteral") {
-    //     irNode node("integer");
-    // }
+    else if (ptr->type == "IntegerLiteral") {
+        return new irNode("integer", ptr);
+    }
     return nullptr;
 }
 
@@ -202,7 +200,7 @@ void CFG::printBlocks()
         std::cout << "root was nullptr" << std::endl;
         return;
     }
-    std::cout << ptr->name << std::endl;
+    std::cout << "Name: " << ptr->name << std::endl;
     for (int i = 0; i < ptr->instructions.size(); i++)
     {
         ptr->instructions[i]->dump();
@@ -226,6 +224,7 @@ void CFG::printBlocksRec(BBlock *ptr)
         std::cout << "was nullptr" << std::endl;
         return;
     }
+    std::cout << "Name: " << ptr->name << std::endl;
     for (int i = 0; i < ptr->instructions.size(); i++)
     {
         ptr->instructions[i]->dump();

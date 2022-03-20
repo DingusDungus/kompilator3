@@ -11,7 +11,7 @@ irNode::~irNode() {}
 
 retStruct *irNode::genIr(BBlock *currentBlock)
 {
-    std::cout << type << std::endl;
+    std::cout << "genIR_type: " << type << std::endl;
     if (type == "connector")
     {
         return connector(currentBlock);
@@ -43,6 +43,10 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     else if (type == "temp")
     {
         return temp(currentBlock);
+    }
+    else if (type == "printStmt")
+    {
+        return printStmt(currentBlock);
     }
     else
     {
@@ -86,6 +90,12 @@ std::string irNode::genBlkName()
 }
 
 // Connector
+retStruct *irNode::printStmt(BBlock *currentBlock)
+{
+    return new retStruct("printStmt", currentBlock);
+}
+
+// Connector
 retStruct *irNode::connector(BBlock *currentBlock)
 {
     for (int i = 0; i < child.size(); i++)
@@ -123,10 +133,12 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
     {
         std::cout << "lhs is null" << std::endl;
     }
-    tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
-    currentBlock->instructions.push_back(in);
-    std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
-    return new retStruct(name, nullptr);
+    if (lhs && rhs && headNode){ // only create instruction if things are not nullptr
+        tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
+        currentBlock->instructions.push_back(in);
+        std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+    }
+    return new retStruct(name, currentBlock);
 }
 
 // expression without assign
@@ -164,6 +176,10 @@ retStruct *irNode::notOp(BBlock *currentBlock)
 // if-else
 retStruct *irNode::ifElse(BBlock *currentBlock)
 {
+    if (currentBlock)
+    {
+        std::cout << "block is null" << std::endl;
+    }
     child[0]->genIr(currentBlock);
     BBlock *trueBlock = new BBlock(genBlkName());
     lhs = child[1]->genIr(trueBlock);
