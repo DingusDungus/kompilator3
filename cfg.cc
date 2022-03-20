@@ -99,26 +99,9 @@ void CFG::buildIrNodeAST(Node *node, irNode *iNode)
     }
     for (auto i = node->children.begin(); i != node->children.end(); i++)
     {
-        irNode *newNode = parseNodes(node);
-        if (newNode != nullptr)
-        {
+        irNode *newNode = parseNodes((*i));
             iNode->child.push_back(newNode);
-            if ((*i)->type == "AssignStatement")
-            {
-                auto child = (*i)->children.begin();
-                child++;
-                std::cout << "HERE\n" << (*child)->type << std::endl;
-                buildIrNodeAST((*child), newNode);
-            }
-            else
-            {
-                buildIrNodeAST((*i), newNode);
-            }
-        }
-        else
-        {
-            buildIrNodeAST((*i), iNode);
-        }
+            buildIrNodeAST((*i), newNode);
     }
 }
 
@@ -130,7 +113,7 @@ void CFG::buildIrNodeAST(Node *node)
 
 irNode *CFG::parseNodes(Node *ptr)
 {
-    if (ptr->type == "StatementList" || ptr->type == "ExpressionList")
+    if (ptr->type == "StatementList" || ptr->type == "ExpressionList" || ptr->type == "IdentifierExpression")
     {
         return new irNode("connector", ptr);
     }
@@ -161,11 +144,11 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (ptr->type == "ArrayIndexAssignStatement")
     {
-        return nullptr;
+        return new irNode("ArrayIndexAssignStatement", ptr);
     }
     else if (ptr->type == "methodCall")
     {
-        return nullptr;
+        return new irNode("methodCall", ptr);
     }
     // Variables
     // else if (ptr->type == "Identifier") {
@@ -174,7 +157,10 @@ irNode *CFG::parseNodes(Node *ptr)
     else if (ptr->type == "IntegerLiteral") {
         return new irNode("integer", ptr);
     }
-    return nullptr;
+    else {
+        return new irNode("connector", ptr);
+        // return nullptr;
+    }
 }
 
 void CFG::postOrderTraversal(Node *leaf)
@@ -204,6 +190,7 @@ void CFG::printPostOrder()
 
 void CFG::printBlocks()
 {
+    std::cout << std::endl << "Printing blocks..." << std::endl;
     BBlock *ptr = root;
     if (ptr == nullptr)
     {

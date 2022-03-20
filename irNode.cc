@@ -11,7 +11,7 @@ irNode::~irNode() {}
 
 retStruct *irNode::genIr(BBlock *currentBlock)
 {
-    std::cout << "genIR_type: " << type << std::endl;
+    std::cout << "genIR_type: " << type << " headNode_type: " << headNode->type << std::endl;
     std::cout << "genIR_child.size(): " << child.size() << std::endl;
     if (type == "connector")
     {
@@ -49,9 +49,13 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return printStmt(currentBlock);
     }
+    else if (type == "methodCall")
+    {
+        return methodCall(currentBlock);
+    }
     else
     {
-        return new retStruct();
+        return connector(currentBlock);
     }
 }
 
@@ -90,6 +94,11 @@ std::string irNode::genBlkName()
     return blkName;
 }
 
+retStruct *irNode::methodCall(BBlock *currentBlock)
+{
+
+}
+
 // Connector
 retStruct *irNode::printStmt(BBlock *currentBlock)
 {
@@ -103,7 +112,7 @@ retStruct *irNode::connector(BBlock *currentBlock)
     {
         child[i]->genIr(currentBlock);
     }
-    return new retStruct("Connector", nullptr);
+    return new retStruct("connector", currentBlock);
 }
 
 // assign-expression
