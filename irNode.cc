@@ -57,17 +57,8 @@ retStruct *irNode::genIr(BBlock *currentBlock)
 
 std::string irNode::genNameAssign(BBlock *currentBlk)
 {
-    Node *parent = headNode->parent_node;
-    auto identifier = parent->children.begin();
-    if ((*identifier)->type == "IdentifierExpression")
-    {
-        auto child = (*identifier)->children.begin();
-        return (*child)->value;
-    }
-    else
-    {
-        return genTempName(currentBlk);
-    }
+    auto identifier = headNode->children.begin();
+    return (*identifier)->value;
 }
 
 std::string irNode::genName(BBlock *currentBlk)
@@ -131,7 +122,8 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
         rhs = child[1]->genIr(currentBlock);
     }
     std::cout << "Name: " << name << std::endl;
-    if (headNode == nullptr) {
+    if (headNode == nullptr)
+    {
         std::cout << "head is null" << std::endl;
     }
     if (rhs == nullptr)
@@ -153,18 +145,22 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
 // expression without assign
 retStruct *irNode::express(BBlock *currentBlock)
 {
-    name = genNameAssign(currentBlock);
+    name = genName(currentBlock);
     if (child.size() > 0)
     {
         lhs = child[0]->genIr(currentBlock);
     }
-    else if (child.size() > 1)
+    if (child.size() > 1)
     {
         rhs = child[1]->genIr(currentBlock);
     }
+    else
+    {
+        return new retStruct("empty expression", currentBlock);
+    }
     tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
-    return new retStruct(name, nullptr);
+    return new retStruct(name, currentBlock);
 }
 
 // notOp

@@ -103,7 +103,17 @@ void CFG::buildIrNodeAST(Node *node, irNode *iNode)
         if (newNode != nullptr)
         {
             iNode->child.push_back(newNode);
-            buildIrNodeAST((*i), newNode);
+            if ((*i)->type == "AssignStatement")
+            {
+                auto child = (*i)->children.begin();
+                child++;
+                std::cout << "HERE\n" << (*child)->type << std::endl;
+                buildIrNodeAST((*child), newNode);
+            }
+            else
+            {
+                buildIrNodeAST((*i), newNode);
+            }
         }
         else
         {
@@ -128,7 +138,7 @@ irNode *CFG::parseNodes(Node *ptr)
     {
         return new irNode("expression", ptr);
     }
-    else if (ptr->type == "Identifier" || ptr->type == "")
+    else if (ptr->type == "Identifier" || ptr->type == "newIdentifier")
     {
         return new irNode("identifier", ptr);
     }
