@@ -144,18 +144,22 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
 // expression without assign
 retStruct *irNode::express(BBlock *currentBlock)
 {
-    name = genNameAssign(currentBlock);
+    name = genName(currentBlock);
     if (child.size() > 0)
     {
         lhs = child[0]->genIr(currentBlock);
     }
-    else if (child.size() > 1)
+    if (child.size() > 1)
     {
         rhs = child[1]->genIr(currentBlock);
     }
+    else
+    {
+        return new retStruct("empty expression", currentBlock);
+    }
     tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
-    return new retStruct(name, nullptr);
+    return new retStruct(name, currentBlock);
 }
 
 // notOp
