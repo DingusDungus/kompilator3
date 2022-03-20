@@ -12,6 +12,7 @@ irNode::~irNode() {}
 retStruct *irNode::genIr(BBlock *currentBlock)
 {
     std::cout << "genIR_type: " << type << std::endl;
+    std::cout << "genIR_child.size(): " << child.size() << std::endl;
     if (type == "connector")
     {
         return connector(currentBlock);
