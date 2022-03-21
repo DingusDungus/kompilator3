@@ -113,7 +113,7 @@ void CFG::buildIrNodeAST(Node *node)
 
 irNode *CFG::parseNodes(Node *ptr)
 {
-    if (ptr->type == "StatementList" || ptr->type == "ExpressionList" || ptr->type == "IdentifierExpression")
+    if (ptr->type == "StatementList" || ptr->type == "ExpressionList")
     {
         return new irNode("connector", ptr);
     }
@@ -205,10 +205,12 @@ void CFG::printBlocks()
     std::cout << std::endl;
     if (ptr->trueExit != nullptr)
     {
+        std::cout << "Nullptr\n";
         printBlocksRec(ptr->trueExit);
     }
     else if (ptr->falseExit != nullptr)
     {
+        std::cout << "Nullptr\n";
         printBlocksRec(ptr->falseExit);
     }
     return;
@@ -216,6 +218,7 @@ void CFG::printBlocks()
 
 void CFG::printBlocksRec(BBlock *ptr)
 {
+    std::cout << "Iteration\n";
     if (ptr == nullptr)
     {
         std::cout << "was nullptr" << std::endl;

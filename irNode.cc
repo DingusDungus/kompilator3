@@ -96,7 +96,7 @@ std::string irNode::genBlkName()
 
 retStruct *irNode::methodCall(BBlock *currentBlock)
 {
-
+    
 }
 
 // Connector
@@ -119,15 +119,18 @@ retStruct *irNode::connector(BBlock *currentBlock)
 retStruct *irNode::assignExpress(BBlock *currentBlock)
 {
     name = genNameAssign(currentBlock);
-    std::cout << "Nr of childs: " << child.size() << std::endl;
+    std::cout << "Nr of childs: " << child.size() << " " << headNode->type << std::endl;
     if (child.size() > 0)
     {
         std::cout << "child 0: " << child[0]->headNode->type << std::endl;
         std::cout << "child 0: " << child[0]->headNode->value << std::endl;
         lhs = child[0]->genIr(currentBlock);
     }
-    else if (child.size() > 1)
+    if (child.size() > 1)
     {
+        std::cout << "Going into rhs!!!\n";
+        std::cout << "child 1: " << child[1]->headNode->type << std::endl;
+        std::cout << "child 1: " << child[1]->headNode->value << std::endl;
         rhs = child[1]->genIr(currentBlock);
     }
     std::cout << "Name: " << name << std::endl;
