@@ -20,6 +20,7 @@ struct retStruct
 class irNode
 {
 private:
+    bool expressionBool(Node *ptr);
     retStruct *connector(BBlock *currentBlock);
     retStruct *boolean(BBlock *currentBlock);
     retStruct *express(BBlock *currentBlock);
@@ -34,6 +35,8 @@ private:
     retStruct *notOp(BBlock *currentBlock);
     retStruct *methodCall(BBlock *currentBlock);
     retStruct *printStmt(BBlock *currentBlock);
+    std::string getBoolName(Node *node, BBlock *currentBlock);
+    tac *genCondTac(Node *node, BBlock *currentBlock);
 
     retStruct *temp(BBlock *currentBlock);
 

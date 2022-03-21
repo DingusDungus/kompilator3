@@ -203,6 +203,7 @@ void CFG::printBlocks()
     std::cout << std::endl
               << "Printing blocks..." << std::endl;
     BBlock *ptr = root;
+    ptr->visited == true;
     if (ptr == nullptr)
     {
         std::cout << "root was nullptr" << std::endl;
@@ -216,12 +217,10 @@ void CFG::printBlocks()
     std::cout << std::endl;
     if (ptr->trueExit != nullptr)
     {
-        std::cout << "Nullptr\n";
         printBlocksRec(ptr->trueExit);
     }
     else if (ptr->falseExit != nullptr)
     {
-        std::cout << "Nullptr\n";
         printBlocksRec(ptr->falseExit);
     }
     return;
@@ -236,16 +235,17 @@ void CFG::printBlocksRec(BBlock *ptr)
         return;
     }
     std::cout << "Name: " << ptr->name << std::endl;
+    ptr->visited = true;
     for (int i = 0; i < ptr->instructions.size(); i++)
     {
         ptr->instructions[i]->dump();
     }
     std::cout << std::endl;
-    if (ptr->trueExit != nullptr)
+    if (ptr->trueExit != nullptr && !ptr->trueExit->visited)
     {
         printBlocksRec(ptr->trueExit);
     }
-    else if (ptr->falseExit != nullptr)
+    else if (ptr->falseExit != nullptr && !ptr->falseExit->visited)
     {
         printBlocksRec(ptr->falseExit);
     }

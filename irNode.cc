@@ -94,9 +94,52 @@ std::string irNode::genBlkName()
     return blkName;
 }
 
+bool irNode::expressionBool(Node *ptr)
+{
+    if (ptr->type == "AndOP" || ptr->type == "OrOP" || ptr->type == "LesserOP" || ptr->type == "GreaterOP" || ptr->type == "EqualsOP" || ptr->type == "AddOP" || ptr->type == "SubOP" || ptr->type == "MultOP" || ptr->type == "DivOP" || ptr->type == "ArrayIndexAccessExpression" || ptr->type == "newIntArray" || ptr->type == "newIdentifier" || ptr->type == "NotOP")
+    {
+        return true;
+    }
+    return false;
+}
+
+std::string irNode::getBoolName(Node *node, BBlock *currentBlock)
+{
+    if (node->type == "IdentifierExpression")
+    {
+        auto child = node->children.begin();
+        return (*child)->value;
+    }
+    if (expressionBool(node))
+    {
+        return genName(currentBlock);
+    }
+    else
+    {
+        return node->value;
+    }
+}
+
+tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
+{
+    tac *condTac = new tac;
+    condTac->result = "condJump";
+    condTac->op = " " + ptr->type + " ";
+    auto child = ptr->children.begin();
+    if (ptr->type == "NotOP")
+    {
+        condTac->lhs = getBoolName((*child), currentBlock);
+        return condTac;
+    }
+    condTac->lhs = getBoolName((*child), currentBlock);
+    child++;
+    condTac->rhs = getBoolName((*child), currentBlock);
+    
+    return condTac;
+}
+
 retStruct *irNode::methodCall(BBlock *currentBlock)
 {
-    
 }
 
 // Connector
@@ -108,9 +151,14 @@ retStruct *irNode::printStmt(BBlock *currentBlock)
 // Connector
 retStruct *irNode::connector(BBlock *currentBlock)
 {
+    retStruct *returnVal;
     for (int i = 0; i < child.size(); i++)
     {
-        child[i]->genIr(currentBlock);
+        returnVal = child[i]->genIr(currentBlock);
+        if (returnVal->value == "ifElse-joinBlock" || returnVal->value == "while-statement-falseBlock" || returnVal->value == "connector")
+        {
+            currentBlock = returnVal->bblock;
+        }
     }
     return new retStruct("connector", currentBlock);
 }
@@ -127,7 +175,8 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
     {
         rhs = child[1]->genIr(currentBlock);
     }
-    if (lhs && rhs && headNode){ // only create instruction if things are not nullptr
+    if (lhs && rhs && headNode)
+    { // only create instruction if things are not nullptr
         tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
         currentBlock->instructions.push_back(in);
         std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
@@ -207,20 +256,26 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
 // while
 retStruct *irNode::whileStmt(BBlock *currentBlock)
 {
-    child[0]->genIr(currentBlock);
+    if (child[0]->child.size() > 0)
+    {
+        child[0]->child[0]->genIr(currentBlock);
+        if (child[0]->child.size() > 1)
+        {
+            child[0]->child[1]->genIr(currentBlock);
+        }
+    }
     BBlock *trueBlock = new BBlock;
     lhs = child[1]->genIr(trueBlock);
     BBlock *falseBlock = new BBlock;
-    rhs = child[2]->genIr(falseBlock);
 
-    tac *in = new expression("while-statement", lhs->value, rhs->value, name);
+    tac *in = genCondTac((*headNode->children.begin()), currentBlock);
     currentBlock->instructions.push_back(in);
 
     currentBlock->trueExit = trueBlock;
     trueBlock->trueExit = currentBlock;
     currentBlock->falseExit = falseBlock;
 
-    return new retStruct("while-statement", falseBlock);
+    return new retStruct("while-statement-falseBlock", falseBlock);
 }
 
 // identifier
