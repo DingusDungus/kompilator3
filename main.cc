@@ -7,6 +7,8 @@
 extern Node *root;
 extern FILE *yyin;
 
+int blockNr = 0;
+
 void yy::parser::error(std::string const &err)
 {
   std::cout << "Cannot generate a syntax tree for this input: " << err << std::endl;

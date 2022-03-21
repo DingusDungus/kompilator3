@@ -15,7 +15,6 @@
 class CFG
 {
 private:
-    int blockNr;
     BBlock *root;
     BBlock *currentBlk;
     std::vector<tac *> temp;

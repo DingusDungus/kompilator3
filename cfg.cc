@@ -1,6 +1,8 @@
 #include "cfg.h"
 #include "irNode.h"
 
+int extern blockNr;
+
 std::string CFG::genBlkName()
 {
     std::string blkName = "block_" + std::to_string(blockNr);

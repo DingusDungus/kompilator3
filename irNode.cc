@@ -1,6 +1,6 @@
 #include "irNode.h"
 
-int blockNr = 0;
+int extern blockNr;
 
 // base-class
 irNode::irNode() {}
