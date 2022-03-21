@@ -119,35 +119,16 @@ retStruct *irNode::connector(BBlock *currentBlock)
 retStruct *irNode::assignExpress(BBlock *currentBlock)
 {
     name = genNameAssign(currentBlock);
-    std::cout << "Nr of childs: " << child.size() << " " << headNode->type << std::endl;
     if (child.size() > 0)
     {
-        std::cout << "child 0: " << child[0]->headNode->type << std::endl;
-        std::cout << "child 0: " << child[0]->headNode->value << std::endl;
         lhs = child[0]->genIr(currentBlock);
     }
     if (child.size() > 1)
     {
-        std::cout << "Going into rhs!!!\n";
-        std::cout << "child 1: " << child[1]->headNode->type << std::endl;
-        std::cout << "child 1: " << child[1]->headNode->value << std::endl;
         rhs = child[1]->genIr(currentBlock);
     }
-    std::cout << "Name: " << name << std::endl;
-    if (headNode == nullptr)
-    {
-        std::cout << "head is null" << std::endl;
-    }
-    if (rhs == nullptr)
-    {
-        std::cout << "rhs is null" << std::endl;
-    }
-    if (lhs == nullptr)
-    {
-        std::cout << "lhs is null" << std::endl;
-    }
     if (lhs && rhs && headNode){ // only create instruction if things are not nullptr
-        tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
+        tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
         currentBlock->instructions.push_back(in);
         std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
     }
@@ -158,19 +139,26 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
 retStruct *irNode::express(BBlock *currentBlock)
 {
     name = genName(currentBlock);
+    std::cout << name << std::endl;
     if (child.size() > 0)
     {
+        std::cout << child[0]->headNode->type << std::endl;
         lhs = child[0]->genIr(currentBlock);
+    }
+    else
+    {
+        return new retStruct("empty expression", currentBlock);
     }
     if (child.size() > 1)
     {
+        std::cout << child[1]->headNode->type << std::endl;
         rhs = child[1]->genIr(currentBlock);
     }
     else
     {
         return new retStruct("empty expression", currentBlock);
     }
-    tac *in = new expression(headNode->type, lhs->value, rhs->value, name);
+    tac *in = new expression(" " + headNode->type + " ", lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
     return new retStruct(name, currentBlock);
 }

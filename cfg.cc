@@ -100,8 +100,15 @@ void CFG::buildIrNodeAST(Node *node, irNode *iNode)
     for (auto i = node->children.begin(); i != node->children.end(); i++)
     {
         irNode *newNode = parseNodes((*i));
+        if (newNode != nullptr)
+        {
             iNode->child.push_back(newNode);
             buildIrNodeAST((*i), newNode);
+        }
+        else
+        {
+            buildIrNodeAST((*i), iNode);
+        }
     }
 }
 
@@ -119,6 +126,7 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (expressionBool(ptr))
     {
+        std::cout << ptr->type << "\n";
         return new irNode("expression", ptr);
     }
     else if (ptr->type == "Identifier" || ptr->type == "newIdentifier")
@@ -154,12 +162,14 @@ irNode *CFG::parseNodes(Node *ptr)
     // else if (ptr->type == "Identifier") {
     //     irNode node("identifier");
     // }
-    else if (ptr->type == "IntegerLiteral") {
+    else if (ptr->type == "IntegerLiteral")
+    {
         return new irNode("integer", ptr);
     }
-    else {
-        return new irNode("connector", ptr);
-        // return nullptr;
+    else
+    {
+        
+        return nullptr;
     }
 }
 
@@ -190,7 +200,8 @@ void CFG::printPostOrder()
 
 void CFG::printBlocks()
 {
-    std::cout << std::endl << "Printing blocks..." << std::endl;
+    std::cout << std::endl
+              << "Printing blocks..." << std::endl;
     BBlock *ptr = root;
     if (ptr == nullptr)
     {
