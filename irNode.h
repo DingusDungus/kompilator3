@@ -34,6 +34,7 @@ private:
     retStruct *newIdentifier(BBlock *currentBlock);
     retStruct *notOp(BBlock *currentBlock);
     retStruct *methodCall(BBlock *currentBlock);
+    retStruct *methodDec(BBlock *currentBlock);
     retStruct *printStmt(BBlock *currentBlock);
     std::string getBoolName(Node *node, BBlock *currentBlock);
     tac *genCondTac(Node *node, BBlock *currentBlock);
