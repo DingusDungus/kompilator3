@@ -170,7 +170,6 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else
     {
-        
         return nullptr;
     }
 }
@@ -221,7 +220,7 @@ void CFG::printBlocks()
     {
         printBlocksRec(ptr->trueExit);
     }
-    else if (ptr->falseExit != nullptr)
+    if (ptr->falseExit != nullptr)
     {
         printBlocksRec(ptr->falseExit);
     }
