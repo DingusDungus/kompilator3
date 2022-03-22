@@ -235,7 +235,6 @@ void CFG::printBlocks()
 
 void CFG::printBlocksRec(BBlock *ptr)
 {
-    std::cout << "Iteration\n";
     if (ptr == nullptr)
     {
         std::cout << "was nullptr" << std::endl;

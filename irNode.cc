@@ -114,7 +114,7 @@ std::string irNode::getBoolName(Node *node, BBlock *currentBlock)
         auto child = node->children.begin();
         return (*child)->value;
     }
-    if (expressionBool(node))
+    else if (expressionBool(node))
     {
         return genName(currentBlock);
     }
@@ -122,23 +122,30 @@ std::string irNode::getBoolName(Node *node, BBlock *currentBlock)
     {
         return node->value;
     }
+    return " ";
 }
 
 tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
 {
     tac *condTac = new tac;
     condTac->result = "condJump";
-    condTac->op = " " + ptr->type + " ";
     auto child = ptr->children.begin();
-    if (ptr->type == "NotOP")
+    if (ptr->type == "IdentifierExpression")
     {
+        condTac->lhs = (*child)->value;
+        return condTac;
+    }
+    else if (ptr->type == "NotOP")
+    {
+        condTac->op = " " + ptr->type + " ";
         condTac->lhs = getBoolName((*child), currentBlock);
         return condTac;
     }
+    condTac->op = " " + ptr->type + " ";
     condTac->lhs = getBoolName((*child), currentBlock);
     child++;
     condTac->rhs = getBoolName((*child), currentBlock);
-    
+
     return condTac;
 }
 
@@ -242,18 +249,23 @@ retStruct *irNode::notOp(BBlock *currentBlock)
 // if-else
 retStruct *irNode::ifElse(BBlock *currentBlock)
 {
-    if (currentBlock)
+    if (child[0]->child.size() > 0)
     {
-        std::cout << "block is null" << std::endl;
+        child[0]->child[0]->genIr(currentBlock);
+        if (child[0]->child.size() > 1)
+        {
+            child[0]->child[1]->genIr(currentBlock);
+        }
     }
-    child[0]->genIr(currentBlock);
+
+    tac *in = genCondTac((*headNode->children.begin()), currentBlock);
+
     BBlock *trueBlock = new BBlock(genBlkName());
     lhs = child[1]->genIr(trueBlock);
     BBlock *falseBlock = new BBlock(genBlkName());
     rhs = child[2]->genIr(falseBlock);
     BBlock *joinBlock = new BBlock(genBlkName());
 
-    tac *in = new expression("if-statement", lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
 
     currentBlock->trueExit = trueBlock;
