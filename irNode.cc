@@ -154,18 +154,23 @@ retStruct *irNode::methodDec(BBlock *currentBlock)
 {
     BBlock *methodBlock = new BBlock(genBlkName());
     methodDecBlocks.push_back(methodBlock);
+
+
     return new retStruct("methodDec", currentBlock);
 }
 
 retStruct *irNode::methodCall(BBlock *currentBlock)
 {
-
     return new retStruct("methodCall", currentBlock);
 }
 
 // Connector
 retStruct *irNode::printStmt(BBlock *currentBlock)
 {
+    if (child.size() > 0)
+    {
+        lhs = child[0]->genIr(currentBlock);
+    }
     return new retStruct("printStmt", currentBlock);
 }
 
