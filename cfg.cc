@@ -174,8 +174,6 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else
     {
-        
-        // return new irNode("connector", ptr);
         return nullptr;
     }
 }
@@ -226,7 +224,7 @@ void CFG::printBlocks()
     {
         printBlocksRec(ptr->trueExit);
     }
-    else if (ptr->falseExit != nullptr)
+    if (ptr->falseExit != nullptr)
     {
         printBlocksRec(ptr->falseExit);
     }
