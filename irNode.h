@@ -35,6 +35,7 @@ private:
     retStruct *notOp(BBlock *currentBlock);
     retStruct *methodCall(BBlock *currentBlock);
     retStruct *methodDec(BBlock *currentBlock);
+    retStruct *methodDecList(BBlock *currentBlock);
     retStruct *thisExp(BBlock *currentBlock);
     retStruct *boolExp(BBlock *currentBlock);
     retStruct *printStmt(BBlock *currentBlock);

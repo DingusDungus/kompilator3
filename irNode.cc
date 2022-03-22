@@ -52,6 +52,10 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return printStmt(currentBlock);
     }
+    // else if (type == "methodDecList")
+    // {
+    //     return methodDecList(currentBlock);
+    // }
     else if (type == "methodDec")
     {
         return methodDec(currentBlock);
@@ -160,13 +164,25 @@ tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
     return condTac;
 }
 
+// retStruct *irNode::methodDecList(BBlock *currentBlock)
+// {
+//     for (int i = 0; i < child.size(); i++) {
+//         child[i]->genIr(currentBlock);
+//     }
+
+//     return new retStruct("methodDecList", currentBlock);
+// }
+
 retStruct *irNode::methodDec(BBlock *currentBlock)
 {
-    BBlock *methodBlock = new BBlock(genBlkName());
+    std::string blockName = genBlkName();
+    BBlock *methodBlock = new BBlock(blockName);
+    for (int i = 0; i < child.size(); i++) {
+        child[i]->genIr(methodBlock);
+    }
+
     methodDecBlocks.push_back(methodBlock);
-
-
-    return new retStruct("methodDec", currentBlock);
+    return new retStruct("methodDec", methodBlock);
 }
 
 retStruct *irNode::methodCall(BBlock *currentBlock)
@@ -199,7 +215,7 @@ retStruct *irNode::methodCall(BBlock *currentBlock)
     tac *callIn = new methodCallTac(methodName, paramNrStr, name);
     currentBlock->instructions.push_back(callIn);
 
-    return new retStruct(name, currentBlock);
+    return new retStruct("methodCall", currentBlock);
 }
 
 // Connector
