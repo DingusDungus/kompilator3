@@ -48,6 +48,7 @@ int main(int argc, char **argv)
   cfgGraph.buildIrNodeAST(root);
   cfgGraph.buildCFG();
   cfgGraph.printBlocks();
+  cfgGraph.generate_tree();
 
   return 0;
 }

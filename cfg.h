@@ -21,6 +21,7 @@ private:
     std::string genBlkName();
     irNode *expression(Node *);
     bool expressionBool(Node *);
+    bool literalBool(Node *);
     std::string tacExpression(Node *ptr);
 
     Node *nRoot;
@@ -31,41 +32,22 @@ private:
 public:
     CFG();
     CFG(Node *root);
-    void buildIrNodeAST(Node* node, irNode* iNode);
-    void buildIrNodeAST(Node* node);
+    void buildIrNodeAST(Node *node, irNode *iNode);
+    void buildIrNodeAST(Node *node);
     void buildCFG();
     void postOrderTraversal(Node *leaf);
-    irNode* parseNodes(Node* ptr);
+    irNode *parseNodes(Node *ptr);
     void printPostOrder();
-    Node* searchTree(Node* root, std::string value);
+    Node *searchTree(Node *root, std::string value);
     void printBlocks();
     void printBlocksRec(BBlock *ptr);
 
-	// seg faults REEEEEEEEEEEEEEEE
-    void generate_tree() {
-	    std::ofstream outStream;
-	    outStream.open("irTree.dot");
-
-	    int count = 0;
-	    outStream << "digraph {" << std::endl;
-	    generate_tree_content(count, &outStream, iRoot);
-	    outStream << "}" << std::endl;
-	    outStream.close();
-
-	    std::cout << "\nBuilt a IR parse-tree:" << std::endl;
+    // seg faults REEEEEEEEEEEEEEEE
+    void generate_tree()
+    {
+        root->generate_tree();
     }
 
-    void generate_tree_content(int &count, ofstream *outStream, irNode* node) {
-      int thisId = count++;
-      node->id = count++;
-      *outStream << "n" << thisId << " [label=\"" << node->type << ":" << node->name << "\"];" << endl;
-
-	  for (int i = 0; i < node->child.size(); i++)
-	  {
-		  generate_tree_content(count, outStream, node);
-		  *outStream << "n" << thisId << " -> n" << node->id << endl;
-	  }
-    }
 };
 
 #endif

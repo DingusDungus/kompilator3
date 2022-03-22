@@ -21,6 +21,7 @@ class irNode
 {
 private:
     bool expressionBool(Node *ptr);
+    int id;
     retStruct *connector(BBlock *currentBlock);
     retStruct *boolean(BBlock *currentBlock);
     retStruct *express(BBlock *currentBlock);
@@ -28,7 +29,7 @@ private:
     retStruct *ifElse(BBlock *currentBlock);
     retStruct *whileStmt(BBlock *currentBlock);
     retStruct *identifier(BBlock *currentBlock);
-    retStruct *integer(BBlock *currentBlock);
+    retStruct *literal(BBlock *currentBlock);
     retStruct *ArrayIndexAccess(BBlock *currentBlock);
     retStruct *newIntArray(BBlock *currentBlock);
     retStruct *newIdentifier(BBlock *currentBlock);
@@ -43,6 +44,17 @@ private:
 
     Node *headNode;
 
+    void generate_tree_content(int &count, ofstream *outStream)
+    {
+        id = count++;
+        *outStream << "n" << id << " [label=\"" << type << "\"];" << endl;
+        for (int i = 0;i < child.size();i++)
+        {
+            child[i]->generate_tree_content(count, outStream);
+            *outStream << "n" << id << " -> n" << child[i]->id << endl;
+        }
+    }
+
 public:
     irNode();
     irNode(std::string type);
@@ -55,7 +67,6 @@ public:
     retStruct *rhs;
     std::string op;
     std::string type;
-    int id;
 
     retStruct *genIr(BBlock *currentBlock);
 
@@ -63,6 +74,19 @@ public:
     std::string genName(BBlock *currentBlk);
     std::string genTempName(BBlock *currentBlk);
     std::string genBlkName();
+    void generate_tree()
+    {
+        std::ofstream outStream;
+        outStream.open("irTree.dot");
+
+        int count = 0;
+        outStream << "digraph {" << std::endl;
+        generate_tree_content(count, &outStream);
+        outStream << "}" << std::endl;
+        outStream.close();
+
+        std::cout << "\nBuilt a IR parse-tree:" << std::endl;
+    }
 };
 
 #endif

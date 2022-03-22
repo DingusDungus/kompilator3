@@ -1,7 +1,7 @@
 #include "irNode.h"
 
 int extern blockNr;
-std::vector<BBlock*> extern methodDecBlocks;
+std::vector<BBlock *> extern methodDecBlocks;
 
 // base-class
 irNode::irNode() {}
@@ -12,8 +12,8 @@ irNode::~irNode() {}
 
 retStruct *irNode::genIr(BBlock *currentBlock)
 {
-    std::cout << "genIR_type: " << type << " headNode_type: " << headNode->type << std::endl;
-    std::cout << "genIR_child.size(): " << child.size() << std::endl;
+    // std::cout << "genIR_type: " << type << " headNode_type: " << headNode->type << std::endl;
+    // std::cout << "genIR_child.size(): " << child.size() << std::endl;
     if (type == "connector")
     {
         return connector(currentBlock);
@@ -38,9 +38,9 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return identifier(currentBlock);
     }
-    else if (type == "integer")
+    else if (type == "literal")
     {
-        return integer(currentBlock);
+        return literal(currentBlock);
     }
     else if (type == "temp")
     {
@@ -96,6 +96,7 @@ std::string irNode::genBlkName()
 {
     std::string blkName = "block_" + std::to_string(blockNr);
     blockNr++;
+    std::cout << blkName << std::endl;
     return blkName;
 }
 
@@ -176,7 +177,7 @@ retStruct *irNode::connector(BBlock *currentBlock)
     for (int i = 0; i < child.size(); i++)
     {
         returnVal = child[i]->genIr(currentBlock);
-        if (returnVal->value == "ifElse-joinBlock" || returnVal->value == "while-statement-falseBlock" || returnVal->value == "connector")
+        if (returnVal->value == "ifElse-joinBlock" || returnVal->value == "while-statement-falseBlock")
         {
             currentBlock = returnVal->bblock;
         }
@@ -214,15 +215,11 @@ retStruct *irNode::express(BBlock *currentBlock)
     {
         std::cout << child[0]->headNode->type << std::endl;
         lhs = child[0]->genIr(currentBlock);
-    }
-    else
-    {
-        return new retStruct("empty expression", currentBlock);
-    }
-    if (child.size() > 1)
-    {
-        std::cout << child[1]->headNode->type << std::endl;
-        rhs = child[1]->genIr(currentBlock);
+        if (child.size() > 1)
+        {
+            std::cout << child[1]->headNode->type << std::endl;
+            rhs = child[1]->genIr(currentBlock);
+        }
     }
     else
     {
@@ -263,18 +260,41 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     tac *in = genCondTac((*headNode->children.begin()), currentBlock);
 
     BBlock *trueBlock = new BBlock(genBlkName());
-    lhs = child[1]->genIr(trueBlock);
     BBlock *falseBlock = new BBlock(genBlkName());
-    rhs = child[2]->genIr(falseBlock);
     BBlock *joinBlock = new BBlock(genBlkName());
-
-    currentBlock->instructions.push_back(in);
-
     currentBlock->trueExit = trueBlock;
     currentBlock->falseExit = falseBlock;
 
-    trueBlock->trueExit = joinBlock;
-    falseBlock->trueExit = joinBlock;
+    lhs = child[1]->genIr(trueBlock);
+    rhs = child[2]->genIr(falseBlock);
+
+    for (int i = 0; i < 5; i++)
+    {
+        std::cout << "\n";
+    }
+    std::cout << "Trueblock\n";
+    for (int i = 0; i < trueBlock->instructions.size(); i++)
+    {
+        trueBlock->instructions[i]->dump();
+        std::cout << "\n"
+                  << child[1]->headNode->type;
+    }
+    std::cout << "\nFalseblock\n";
+    for (int i = 0; i < falseBlock->instructions.size(); i++)
+    {
+        falseBlock->instructions[i]->dump();
+        std::cout << "\n"
+                  << child[2]->headNode->type;
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        std::cout << "\n";
+    }
+
+    currentBlock->instructions.push_back(in);
+
+    lhs->bblock->trueExit = joinBlock;
+    rhs->bblock->trueExit = joinBlock;
 
     return new retStruct("ifElse-joinBlock", joinBlock);
 }
@@ -298,7 +318,7 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
     currentBlock->instructions.push_back(in);
 
     currentBlock->trueExit = trueBlock;
-    trueBlock->trueExit = currentBlock;
+    lhs->bblock->trueExit = currentBlock;
     currentBlock->falseExit = falseBlock;
 
     return new retStruct("while-statement-falseBlock", falseBlock);
@@ -307,13 +327,13 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
 // identifier
 retStruct *irNode::identifier(BBlock *currentBlock)
 {
-    return new retStruct(headNode->value, nullptr);
+    return new retStruct(headNode->value, currentBlock);
 }
 
-// integer-literal
-retStruct *irNode::integer(BBlock *currentBlock)
+// literal
+retStruct *irNode::literal(BBlock *currentBlock)
 {
-    return new retStruct(headNode->value, nullptr);
+    return new retStruct(headNode->value, currentBlock);
 }
 
 // boolean-literal

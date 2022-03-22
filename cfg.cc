@@ -70,6 +70,15 @@ bool CFG::expressionBool(Node *ptr)
     return false;
 }
 
+bool CFG::literalBool(Node *ptr)
+{
+    if (ptr->type == "IntegerLiteral" || ptr->type == "BooleanExpression")
+    {
+        return true;
+    }
+    return false;
+}
+
 irNode *CFG::expression(Node *ptr)
 {
     if (ptr->type == "AndOP" || ptr->type == "OrOP" || ptr->type == "LesserOP" || ptr->type == "GreaterOP" || ptr->type == "EqualsOP" || ptr->type == "AddOP" || ptr->type == "SubOP" || ptr->type == "MultOP" || ptr->type == "DivOP")
@@ -132,6 +141,10 @@ irNode *CFG::parseNodes(Node *ptr)
     {
         std::cout << ptr->type << "\n";
         return new irNode("expression", ptr);
+    }
+    else if (literalBool(ptr))
+    {
+        return new irNode("literal", ptr);
     }
     else if (ptr->type == "Identifier" || ptr->type == "newIdentifier")
     {
@@ -209,6 +222,7 @@ void CFG::printPostOrder()
 
 void CFG::printBlocks()
 {
+    iRoot->generate_tree();
     std::cout << std::endl
               << "Printing blocks..." << std::endl;
     std::cout << "method declarations: " << methodDecBlocks.size() << std::endl;
