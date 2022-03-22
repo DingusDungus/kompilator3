@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "parser.tab.hh"
 #include "symbolTable.h"
 #include "semanticAnalyser.h"
