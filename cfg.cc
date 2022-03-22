@@ -144,7 +144,7 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (ptr->type == "AssignStatement")
     {
-        return new irNode("assignExpression", ptr);
+        return new irNode("assignStmt", ptr);
     }
     else if (ptr->type == "IF_ElseStatement")
     {

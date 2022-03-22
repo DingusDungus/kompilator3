@@ -24,7 +24,7 @@ private:
     retStruct *connector(BBlock *currentBlock);
     retStruct *boolean(BBlock *currentBlock);
     retStruct *express(BBlock *currentBlock);
-    retStruct *assignExpress(BBlock *currentBlock);
+    retStruct *assignStmt(BBlock *currentBlock);
     retStruct *ifElse(BBlock *currentBlock);
     retStruct *whileStmt(BBlock *currentBlock);
     retStruct *identifier(BBlock *currentBlock);

@@ -20,9 +20,9 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return connector(currentBlock);
     }
-    else if (type == "assignExpression")
+    else if (type == "assignStmt")
     {
-        return assignExpress(currentBlock);
+        return assignStmt(currentBlock);
     }
     else if (type == "expression")
     {
@@ -177,7 +177,7 @@ retStruct *irNode::methodDec(BBlock *currentBlock)
 {
     std::string blockName = genBlkName();
     BBlock *methodBlock = new BBlock(blockName);
-    for (int i = 0; i < child.size(); i++) {
+    for (int i = 3; i < child.size(); i++) {
         child[i]->genIr(methodBlock);
     }
 
@@ -212,6 +212,7 @@ retStruct *irNode::methodCall(BBlock *currentBlock)
     // add last call instruction
     std::cout << "genName: " << name << std::endl;
     std::string paramNrStr = std::to_string(nrOfParams);
+    std::cout << "nrOfParams: " << paramNrStr << std::endl;
     tac *callIn = new methodCallTac(methodName, paramNrStr, name);
     currentBlock->instructions.push_back(callIn);
 
@@ -243,8 +244,8 @@ retStruct *irNode::connector(BBlock *currentBlock)
     return new retStruct("connector", currentBlock);
 }
 
-// assign-expression
-retStruct *irNode::assignExpress(BBlock *currentBlock)
+// assign-statement
+retStruct *irNode::assignStmt(BBlock *currentBlock)
 {
     name = genNameAssign(currentBlock);
     if (child.size() > 0)
