@@ -11,6 +11,7 @@ class test {
     public int Meth(int a, boolean b) {
         boolean bob;
         bob = b;
+        b = this.SetHas_Left(bob);
         a = a + 1;
         return a;
     }

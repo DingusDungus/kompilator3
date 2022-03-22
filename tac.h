@@ -9,7 +9,7 @@ class tac
 public:
     std::string op, lhs, rhs, result;
     bool lhsSet;
-    void dump()
+    virtual void dump()
     {
         std::cout << result << ":=" << lhs << op << rhs << std::endl;
     }
@@ -27,15 +27,34 @@ public:
     }
 };
 
-class methodCall : public tac
+class parameter : public tac
 {
 public:
-    methodCall(std::string _f, std::string _n, std::string _result)
+    parameter(std::string _p)
+    {
+        op = "param";
+        lhs = "";
+        rhs = _p;
+        result = "";
+    }
+    void dump() override 
+    {
+        std::cout << op << " " << rhs << std::endl;
+    }
+};
+class methodCallTac : public tac
+{
+public:
+    methodCallTac(std::string _f, std::string _n, std::string _result)
     {
         op = "call";
         lhs = _f;
         rhs = _n;
         result = _result;
+    }
+    void dump() override 
+    {
+        std::cout << result << ":=" << op << " " << lhs << " " << rhs << std::endl;
     }
 };
 

@@ -25,7 +25,7 @@ private:
     retStruct *connector(BBlock *currentBlock);
     retStruct *boolean(BBlock *currentBlock);
     retStruct *express(BBlock *currentBlock);
-    retStruct *assignExpress(BBlock *currentBlock);
+    retStruct *assignStmt(BBlock *currentBlock);
     retStruct *ifElse(BBlock *currentBlock);
     retStruct *whileStmt(BBlock *currentBlock);
     retStruct *identifier(BBlock *currentBlock);
@@ -36,6 +36,9 @@ private:
     retStruct *notOp(BBlock *currentBlock);
     retStruct *methodCall(BBlock *currentBlock);
     retStruct *methodDec(BBlock *currentBlock);
+    retStruct *methodDecList(BBlock *currentBlock);
+    retStruct *thisExp(BBlock *currentBlock);
+    retStruct *boolExp(BBlock *currentBlock);
     retStruct *printStmt(BBlock *currentBlock);
     std::string getBoolName(Node *node, BBlock *currentBlock);
     tac *genCondTac(Node *node, BBlock *currentBlock);

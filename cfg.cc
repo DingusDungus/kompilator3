@@ -157,7 +157,7 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (ptr->type == "AssignStatement")
     {
-        return new irNode("assignExpression", ptr);
+        return new irNode("assignStmt", ptr);
     }
     else if (ptr->type == "IF_ElseStatement")
     {
@@ -171,15 +171,24 @@ irNode *CFG::parseNodes(Node *ptr)
     {
         return new irNode("ArrayIndexAssignStatement", ptr);
     }
+    // else if ("MethodDeclarationList") {
+    //     return new irNode("methodDecList", ptr);
+    // }
     else if (ptr->type == "MethodDeclaration")
     {
-        //return new irNode("methodDec", ptr);
-        return nullptr;
+        return new irNode("methodDec", ptr);
     }
     else if (ptr->type == "MethodCall")
     {
-        //return new irNode("methodCall", ptr);
-        return nullptr;
+        return new irNode("methodCall", ptr);
+    }
+    else if (ptr->type == "ThisExpression")
+    {
+        return new irNode("thisExp", ptr);
+    }
+    else if (ptr->type == "BooleanExpression")
+    {
+        return new irNode("boolExp", ptr);
     }
     // Variables
     // else if (ptr->type == "Identifier") {
@@ -246,6 +255,15 @@ void CFG::printBlocks()
     if (ptr->falseExit != nullptr)
     {
         printBlocksRec(ptr->falseExit);
+    }
+    // print method declaration blocks
+    std::cout << "--- Printing Method declaration blocks ---" << std::endl;
+    for (int i = 0; i < methodDecBlocks.size(); i++) {
+        std::cout << "Name: " << methodDecBlocks[i]->name << std::endl;
+        for (int i = 0; i < methodDecBlocks[i]->instructions.size(); i++)
+            {
+                methodDecBlocks[i]->instructions[i]->dump();
+            }
     }
     return;
 }

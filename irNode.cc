@@ -1,4 +1,6 @@
 #include "irNode.h"
+#include "tac.h"
+#include <string>
 
 int extern blockNr;
 std::vector<BBlock *> extern methodDecBlocks;
@@ -18,9 +20,9 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return connector(currentBlock);
     }
-    else if (type == "assignExpression")
+    else if (type == "assignStmt")
     {
-        return assignExpress(currentBlock);
+        return assignStmt(currentBlock);
     }
     else if (type == "expression")
     {
@@ -50,6 +52,10 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return printStmt(currentBlock);
     }
+    // else if (type == "methodDecList")
+    // {
+    //     return methodDecList(currentBlock);
+    // }
     else if (type == "methodDec")
     {
         return methodDec(currentBlock);
@@ -57,6 +63,14 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     else if (type == "methodCall")
     {
         return methodCall(currentBlock);
+    }
+    else if (type == "thisExp")
+    {
+        return thisExp(currentBlock);
+    }
+    else if (type == "boolExp")
+    {
+        return boolExp(currentBlock);
     }
     else
     {
@@ -151,22 +165,68 @@ tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
     return condTac;
 }
 
+// retStruct *irNode::methodDecList(BBlock *currentBlock)
+// {
+//     for (int i = 0; i < child.size(); i++) {
+//         child[i]->genIr(currentBlock);
+//     }
+
+//     return new retStruct("methodDecList", currentBlock);
+// }
+
 retStruct *irNode::methodDec(BBlock *currentBlock)
 {
-    BBlock *methodBlock = new BBlock(genBlkName());
+    std::string blockName = genBlkName();
+    BBlock *methodBlock = new BBlock(blockName);
+    for (int i = 3; i < child.size(); i++) {
+        child[i]->genIr(methodBlock);
+    }
+
     methodDecBlocks.push_back(methodBlock);
-    return new retStruct("methodDec", currentBlock);
+    return new retStruct("methodDec", methodBlock);
 }
 
 retStruct *irNode::methodCall(BBlock *currentBlock)
 {
+    name = genName(currentBlock);
+    int nrOfParams = 1;
+    std::string methodName = child[1]->genIr(currentBlock)->value;
+    std::cout << "methodName: " << methodName << std::endl;
 
-    return new retStruct("methodCall", currentBlock);
+    // add class scope as first parameter
+    std::string scopeName = child[0]->genIr(currentBlock)->value;
+    std::cout << "Class scope(first param): " << scopeName << std::endl;
+    tac *scopeIn = new parameter(scopeName);
+    currentBlock->instructions.push_back(scopeIn);
+
+    // find params
+    std::vector<irNode*> params = child[2]->child;
+    // loop through parameters
+    for (int i = 0; i < params.size(); i++) {
+        std::string param = params[i]->genIr(currentBlock)->value;
+        std::cout << "param: " << param << std::endl;
+        tac *paramIn = new parameter(param);
+        currentBlock->instructions.push_back(paramIn);
+        nrOfParams++;
+    }
+
+    // add last call instruction
+    std::cout << "genName: " << name << std::endl;
+    std::string paramNrStr = std::to_string(nrOfParams);
+    std::cout << "nrOfParams: " << paramNrStr << std::endl;
+    tac *callIn = new methodCallTac(methodName, paramNrStr, name);
+    currentBlock->instructions.push_back(callIn);
+
+    return new retStruct(name, currentBlock);
 }
 
 // Connector
 retStruct *irNode::printStmt(BBlock *currentBlock)
 {
+    if (child.size() > 0)
+    {
+        lhs = child[0]->genIr(currentBlock);
+    }
     return new retStruct("printStmt", currentBlock);
 }
 
@@ -185,8 +245,8 @@ retStruct *irNode::connector(BBlock *currentBlock)
     return new retStruct("connector", currentBlock);
 }
 
-// assign-expression
-retStruct *irNode::assignExpress(BBlock *currentBlock)
+// assign-statement
+retStruct *irNode::assignStmt(BBlock *currentBlock)
 {
     name = genNameAssign(currentBlock);
     if (child.size() > 0)
@@ -199,9 +259,18 @@ retStruct *irNode::assignExpress(BBlock *currentBlock)
     }
     if (lhs && rhs && headNode)
     { // only create instruction if things are not nullptr
-        tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
-        currentBlock->instructions.push_back(in);
-        std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+        if (child[1]->headNode->type == "MethodCall"){
+            // Is NOT a methodCall
+            tac *in = new expression("", "", rhs->value, name);
+            currentBlock->instructions.push_back(in);
+            std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+        }
+        else {
+            // Is NOT a methodCall
+            tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
+            currentBlock->instructions.push_back(in);
+            std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+        }
     }
     return new retStruct(name, currentBlock);
 }
@@ -330,7 +399,19 @@ retStruct *irNode::identifier(BBlock *currentBlock)
     return new retStruct(headNode->value, currentBlock);
 }
 
-// literal
+// ThisExpression
+retStruct *irNode::thisExp(BBlock *currentBlock)
+{
+    return new retStruct(headNode->value, nullptr);
+}
+
+// BooleanExpression
+retStruct *irNode::boolExp(BBlock *currentBlock)
+{
+    return new retStruct(headNode->value, nullptr);
+}
+
+// integer-literal
 retStruct *irNode::literal(BBlock *currentBlock)
 {
     return new retStruct(headNode->value, currentBlock);
