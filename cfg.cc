@@ -160,11 +160,13 @@ irNode *CFG::parseNodes(Node *ptr)
     }
     else if (ptr->type == "MethodDeclaration")
     {
-        return new irNode("methodDec", ptr);
+        //return new irNode("methodDec", ptr);
+        return nullptr;
     }
     else if (ptr->type == "MethodCall")
     {
-        return new irNode("methodCall", ptr);
+        //return new irNode("methodCall", ptr);
+        return nullptr;
     }
     else if (ptr->type == "ThisExpression")
     {
@@ -260,7 +262,7 @@ void CFG::printBlocksRec(BBlock *ptr)
     {
         printBlocksRec(ptr->trueExit);
     }
-    else if (ptr->falseExit != nullptr && !ptr->falseExit->visited)
+    if (ptr->falseExit != nullptr && !ptr->falseExit->visited)
     {
         printBlocksRec(ptr->falseExit);
     }
