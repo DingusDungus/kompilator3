@@ -216,7 +216,7 @@ retStruct *irNode::methodCall(BBlock *currentBlock)
     tac *callIn = new methodCallTac(methodName, paramNrStr, name);
     currentBlock->instructions.push_back(callIn);
 
-    return new retStruct("methodCall", currentBlock);
+    return new retStruct(name, currentBlock);
 }
 
 // Connector
@@ -258,9 +258,18 @@ retStruct *irNode::assignStmt(BBlock *currentBlock)
     }
     if (lhs && rhs && headNode)
     { // only create instruction if things are not nullptr
-        tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
-        currentBlock->instructions.push_back(in);
-        std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+        if (child[1]->headNode->type == "MethodCall"){
+            // Is NOT a methodCall
+            tac *in = new expression("", "", rhs->value, name);
+            currentBlock->instructions.push_back(in);
+            std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+        }
+        else {
+            // Is NOT a methodCall
+            tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
+            currentBlock->instructions.push_back(in);
+            std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+        }
     }
     return new retStruct(name, currentBlock);
 }
