@@ -166,6 +166,14 @@ irNode *CFG::parseNodes(Node *ptr)
     {
         return new irNode("methodCall", ptr);
     }
+    else if (ptr->type == "ThisExpression")
+    {
+        return new irNode("thisExp", ptr);
+    }
+    else if (ptr->type == "BooleanExpression")
+    {
+        return new irNode("boolExp", ptr);
+    }
     // Variables
     // else if (ptr->type == "Identifier") {
     //     irNode node("identifier");

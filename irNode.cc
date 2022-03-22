@@ -1,4 +1,6 @@
 #include "irNode.h"
+#include "tac.h"
+#include <string>
 
 int extern blockNr;
 std::vector<BBlock*> extern methodDecBlocks;
@@ -57,6 +59,14 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     else if (type == "methodCall")
     {
         return methodCall(currentBlock);
+    }
+    else if (type == "thisExp")
+    {
+        return thisExp(currentBlock);
+    }
+    else if (type == "boolExp")
+    {
+        return boolExp(currentBlock);
     }
     else
     {
@@ -161,7 +171,35 @@ retStruct *irNode::methodDec(BBlock *currentBlock)
 
 retStruct *irNode::methodCall(BBlock *currentBlock)
 {
-    return new retStruct("methodCall", currentBlock);
+    name = genName(currentBlock);
+    int nrOfParams = 1;
+    std::string methodName = child[1]->genIr(currentBlock)->value;
+    std::cout << "methodName: " << methodName << std::endl;
+
+    // add class scope as first parameter
+    std::string scopeName = child[0]->genIr(currentBlock)->value;
+    std::cout << "Class scope(first param): " << scopeName << std::endl;
+    tac *scopeIn = new parameter(scopeName);
+    currentBlock->instructions.push_back(scopeIn);
+
+    // find params
+    std::vector<irNode*> params = child[2]->child;
+    // loop through parameters
+    for (int i = 0; i < params.size(); i++) {
+        std::string param = params[i]->genIr(currentBlock)->value;
+        std::cout << "param: " << param << std::endl;
+        tac *paramIn = new parameter(param);
+        currentBlock->instructions.push_back(paramIn);
+        nrOfParams++;
+    }
+
+    // add last call instruction
+    std::cout << "genName: " << name << std::endl;
+    std::string paramNrStr = std::to_string(nrOfParams);
+    tac *callIn = new methodCallTac(methodName, paramNrStr, name);
+    currentBlock->instructions.push_back(callIn);
+
+    return new retStruct(name, currentBlock);
 }
 
 // Connector
@@ -311,6 +349,18 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
 
 // identifier
 retStruct *irNode::identifier(BBlock *currentBlock)
+{
+    return new retStruct(headNode->value, nullptr);
+}
+
+// ThisExpression
+retStruct *irNode::thisExp(BBlock *currentBlock)
+{
+    return new retStruct(headNode->value, nullptr);
+}
+
+// BooleanExpression
+retStruct *irNode::boolExp(BBlock *currentBlock)
 {
     return new retStruct(headNode->value, nullptr);
 }

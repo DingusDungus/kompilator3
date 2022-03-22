@@ -1,6 +1,6 @@
 class BigBoyClass {
     public static void main(String[] args) {
-        System.out.println(test.Meth(10,true));
+        x = test.Meth(10,true);
     }
 }
 
