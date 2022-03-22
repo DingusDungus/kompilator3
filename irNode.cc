@@ -7,8 +7,8 @@ std::vector<BBlock *> extern methodDecBlocks;
 
 // base-class
 irNode::irNode() {}
-irNode::irNode(std::string type) : type(type) {}
-irNode::irNode(std::string type, Node *node) : type(type), headNode(node) {}
+irNode::irNode(std::string type) : type(type), lhs(nullptr), rhs(nullptr) {}
+irNode::irNode(std::string type, Node *node) : type(type), headNode(node), lhs(nullptr), rhs(nullptr) {}
 
 irNode::~irNode() {}
 
@@ -280,21 +280,23 @@ retStruct *irNode::express(BBlock *currentBlock)
 {
     name = genName(currentBlock);
     std::cout << name << std::endl;
+    tac *in = new expression(" " + headNode->type + " ", " ", " ", name);
     if (child.size() > 0)
     {
         std::cout << child[0]->headNode->type << std::endl;
         lhs = child[0]->genIr(currentBlock);
+        in->lhs = lhs->value;
         if (child.size() > 1)
         {
             std::cout << child[1]->headNode->type << std::endl;
             rhs = child[1]->genIr(currentBlock);
+            in->rhs = rhs->value;
         }
     }
     else
     {
         return new retStruct("empty expression", currentBlock);
     }
-    tac *in = new expression(" " + headNode->type + " ", lhs->value, rhs->value, name);
     currentBlock->instructions.push_back(in);
     return new retStruct(name, currentBlock);
 }
