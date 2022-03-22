@@ -49,6 +49,10 @@ retStruct *irNode::genIr(BBlock *currentBlock)
     {
         return printStmt(currentBlock);
     }
+    else if (type == "methodDec")
+    {
+        return methodDec(currentBlock);
+    }
     else if (type == "methodCall")
     {
         return methodCall(currentBlock);
@@ -138,8 +142,16 @@ tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
     return condTac;
 }
 
+retStruct *irNode::methodDec(BBlock *currentBlock)
+{
+    BBlock *methodBlock = new BBlock(genBlkName());
+
+
+}
+
 retStruct *irNode::methodCall(BBlock *currentBlock)
 {
+
 }
 
 // Connector

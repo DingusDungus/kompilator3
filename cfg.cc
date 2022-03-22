@@ -156,7 +156,11 @@ irNode *CFG::parseNodes(Node *ptr)
     {
         return new irNode("ArrayIndexAssignStatement", ptr);
     }
-    else if (ptr->type == "methodCall")
+    else if (ptr->type == "MethodDeclaration")
+    {
+        return new irNode("methodDec", ptr);
+    }
+    else if (ptr->type == "MethodCall")
     {
         return new irNode("methodCall", ptr);
     }
@@ -171,6 +175,7 @@ irNode *CFG::parseNodes(Node *ptr)
     else
     {
         
+        // return new irNode("connector", ptr);
         return nullptr;
     }
 }
