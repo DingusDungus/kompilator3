@@ -1,7 +1,9 @@
 #include "cfg.h"
+#include "bblock.h"
 #include "irNode.h"
 
 int extern blockNr;
+std::vector<BBlock*> extern methodDecBlocks;
 
 std::string CFG::genBlkName()
 {
@@ -209,6 +211,7 @@ void CFG::printBlocks()
 {
     std::cout << std::endl
               << "Printing blocks..." << std::endl;
+    std::cout << "method declarations: " << methodDecBlocks.size() << std::endl;
     BBlock *ptr = root;
     ptr->visited == true;
     if (ptr == nullptr)

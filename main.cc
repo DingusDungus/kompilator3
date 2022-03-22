@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "parser.tab.hh"
 #include "symbolTable.h"
 #include "semanticAnalyser.h"
@@ -8,6 +9,7 @@ extern Node *root;
 extern FILE *yyin;
 
 int blockNr = 0;
+std::vector<BBlock*> methodDecBlocks;
 
 void yy::parser::error(std::string const &err)
 {

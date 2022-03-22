@@ -44,3 +44,4 @@ lex.yy.c
 parser.tab.cc
 parser.tab.hh
 stack.hh
+Session.vim

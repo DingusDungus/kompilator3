@@ -1,6 +1,7 @@
 #include "irNode.h"
 
 int extern blockNr;
+std::vector<BBlock*> extern methodDecBlocks;
 
 // base-class
 irNode::irNode() {}
@@ -152,13 +153,14 @@ tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
 retStruct *irNode::methodDec(BBlock *currentBlock)
 {
     BBlock *methodBlock = new BBlock(genBlkName());
-
-
+    methodDecBlocks.push_back(methodBlock);
+    return new retStruct("methodDec", currentBlock);
 }
 
 retStruct *irNode::methodCall(BBlock *currentBlock)
 {
 
+    return new retStruct("methodCall", currentBlock);
 }
 
 // Connector
