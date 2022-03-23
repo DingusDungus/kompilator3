@@ -268,16 +268,11 @@ retStruct *irNode::assignStmt(BBlock *currentBlock)
     }
     if (lhs && rhs && headNode)
     { // only create instruction if things are not nullptr
-        if (child[1]->headNode->type == "MethodCall")
+        if (child[1]->headNode->type == "MethodCall"
+            || child[1]->headNode->type == "Identifier"
+            || child[1]->headNode->type == "IntegerLiteral"
+            || child[1]->headNode->type == "BooleanExpression" )
         {
-            // Is a methodCall
-            tac *in = new expression("", "", rhs->value, name);
-            currentBlock->instructions.push_back(in);
-            std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
-        }
-        else if (child[1]->headNode->type == "Identifier")
-        {
-            // Is a Identifier
             tac *in = new expression("", "", rhs->value, name);
             currentBlock->instructions.push_back(in);
             std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
