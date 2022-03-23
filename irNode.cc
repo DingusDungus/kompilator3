@@ -352,19 +352,9 @@ retStruct *irNode::notOp(BBlock *currentBlock)
 // if-else
 retStruct *irNode::ifElse(BBlock *currentBlock)
 {
-    // if (child[0]->child.size() > 0)
-    // {
-    //     child[0]->child[0]->genIr(currentBlock);
-    //     if (child[0]->child.size() > 1)
-    //     {
-    //         child[0]->child[1]->genIr(currentBlock);
-    //     }
-    // }
     std::string tempName = child[0]->genIr(currentBlock)->value;
 
-
     tac *in = genCondTac((*headNode->children.begin()), currentBlock, tempName);
-    // tac *in = expression("","")
 
     BBlock *trueBlock = new BBlock(genBlkName());
     BBlock *falseBlock = new BBlock(genBlkName());
