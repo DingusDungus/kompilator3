@@ -128,6 +128,9 @@ void CFG::buildIrNodeAST(Node *node)
 {
     // start recursion
     buildIrNodeAST(nRoot, iRoot);
+    tac *stop = new tac;
+    stop->result = "stop";
+    root->instructions.push_back(stop);
 }
 
 irNode *CFG::parseNodes(Node *ptr)
@@ -316,4 +319,15 @@ void CFG::printBlocksRec(BBlock *ptr)
         printBlocksRec(ptr->falseExit);
     }
     return;
+}
+
+void CFG::genByteCode()
+{
+    std::ofstream outStream;
+    outStream.open("byteCode.o");
+    for (int i = 0;i < root->instructions.size();i++)
+    {
+        outStream << root->instructions[i]->generate_code();  
+    }
+    outStream.close();
 }

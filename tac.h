@@ -25,8 +25,17 @@ public:
     {
         std::cout << result << ":=" << lhs << op << rhs << std::endl;
         std::string tacVal = "( " + lhs + " " + op + " " + rhs + " )";
-        variable* var = new variable(result,tacVal);
-        SYMBOL_TABLE.putTemps(result,var);
+        variable *var = new variable(result, tacVal);
+        SYMBOL_TABLE.putTemps(result, var);
+    }
+    bool isNumber(const std::string &str)
+    {
+        for (char const &c : str)
+        {
+            if (std::isdigit(c) == 0)
+                return false;
+        }
+        return true;
     }
     std::string decideOp()
     {
@@ -81,30 +90,157 @@ public:
         {
             return "print";
         }
+        else if (result == "ifElse")
+        {
+            return "";
+        }
+        else if (result == "while")
+        {
+            return "";
+        }
+        else if (result == "stop")
+        {
+            return "stop";
+        }
+        else
+        {
+            return "istore";
+        }
     }
-    
+
+    int decideId(std::string name)
+    {
+        if (name == "AddOP")
+        {
+            return 3;
+        }
+        else if (name == "SubOP")
+        {
+            return 4;
+        }
+        else if (name == "MultOP")
+        {
+            return 5;
+        }
+        else if (name == "DivOP")
+        {
+            return 6;
+        }
+        else if (name == "AndOP")
+        {
+            return 7;
+        }
+        else if (name == "OrOP")
+        {
+            return 8;
+        }
+        else if (name == "NotOP")
+        {
+            return 9;
+        }
+        else if (name == "LesserOp")
+        {
+            return 10;
+        }
+        else if (name == "GreaterOp")
+        {
+            return 11;
+        }
+        else if (name == "EqualsOp")
+        {
+            return 12;
+        }
+        else if (name == "print")
+        {
+            return 13;
+        }
+        else if (name == "ifElse")
+        {
+            return 14;
+        }
+        else if (name == "while")
+        {
+            return 15;
+        }
+        else if (name == "stop")
+        {
+            return 16;
+        }
+        else
+        {
+            return 17; // istore
+        }
+    }
+
     std::string generate_code()
     {
         if (lhs.length() > 0)
         {
-            byteCode *newByteCode = new byteCode(0, "iload " + lhs);
-            bytecodes.push_back(newByteCode);
+            if (isNumber(lhs) || lhs == "true" || lhs == "false")
+            {
+                if (lhs == "true")
+                {
+                    lhs = "1";
+                }
+                else if (lhs == "false")
+                {
+                    lhs = "0";
+                }
+                byteCode *newByteCode = new byteCode(1, "iconst " + lhs);
+                bytecodes.push_back(newByteCode);
+            }
+            else
+            {
+                byteCode *newByteCode = new byteCode(0, "iload " + rhs);
+                bytecodes.push_back(newByteCode);
+            }
         }
         if (rhs.length() > 0)
         {
-            byteCode *newByteCode = new byteCode(0, "iload " + rhs);
-            bytecodes.push_back(newByteCode);
+            if (isNumber(rhs) || rhs == "true" || rhs == "false")
+            {
+                if (rhs == "true")
+                {
+                    rhs = "1";
+                }
+                else if (rhs == "false")
+                {
+                    rhs = "0";
+                }
+                byteCode *newByteCode = new byteCode(2, "iconst " + rhs);
+                bytecodes.push_back(newByteCode);
+            }
+            else
+            {
+                byteCode *newByteCode = new byteCode(0, "iload " + rhs);
+                bytecodes.push_back(newByteCode);
+            }
         }
         if (op.length() > 0)
         {
-            byteCode *newByteCode = new byteCode(0, (decideOp() + rhs));
+            byteCode *newByteCode = new byteCode(decideId(rhs), (decideOp() + rhs));
             bytecodes.push_back(newByteCode);
         }
-        if (rhs.length() > 0)
+        if (result.length() > 0)
         {
-            byteCode *newByteCode = new byteCode(0, "iload " + rhs);
-            bytecodes.push_back(newByteCode);
+            std::string instruction = decideIn();
+            if (instruction == "print" || instruction == "stop")
+            {
+                byteCode *newByteCode = new byteCode(decideId(result), instruction);
+                bytecodes.push_back(newByteCode);
+            }
+            else
+            {
+                byteCode *newByteCode = new byteCode(17, ("istore " + result));
+                bytecodes.push_back(newByteCode);
+            }
         }
+        std::string codeString;
+        for (int i = 0; i < bytecodes.size(); i++)
+        {
+            codeString += (std::to_string(bytecodes[i]->index) + " " + bytecodes[i]->instruction + "\n"); 
+        }
+        return codeString;
     }
 };
 

@@ -41,6 +41,7 @@ public:
     void printBlocks();
     void printBlocksRec(BBlock *ptr);
     void generate_tree();
+    void genByteCode();
 };
 
 #endif
