@@ -24,23 +24,15 @@ public:
     BBlock(std::string name) : name(name), trueExit(nullptr), falseExit(nullptr), tempCount(0), visited(true) {}
     BBlock(std::string name, BBlock *trueExit, BBlock *falseExit) : name(name), trueExit(trueExit), falseExit(falseExit), tempCount(0), visited(true) {}
 
-    void generate_tree()
+    int generate_tree(ofstream &outStream, int count)
     {
-        std::ofstream outStream;
-        outStream.open("cfgTree.dot");
-
-        int count = 0;
-        outStream << "digraph {" << std::endl;
         generate_tree_content(count, &outStream);
-        outStream << "}" << std::endl;
-        outStream.close();
-
+        return count;
         std::cout << "\nBuilt a CFG parse-tree:" << std::endl;
     }
 
     void generate_tree_content(int &count, ofstream *outStream)
     {
-        std::cout << "Generating!\n";
         id = count++;
         visited = false;
         *outStream << "n" << id << " [label=\"" << name << "\n\l";
