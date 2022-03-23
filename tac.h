@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <unistd.h>
+#include <sys/wait.h>
 #include "symbolTable.h"
 
 symbolTable extern SYMBOL_TABLE;
@@ -29,6 +32,13 @@ public:
         std::string tacVal = "( " + lhs + " " + op + " " + rhs + " )";
         variable* var = new variable(result,tacVal);
         SYMBOL_TABLE.putTemps(result,var);
+    }
+    virtual std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = result + ":=" + lhs + " " + op + " " + rhs;
+            std::cout << result << ":=" << lhs << op << rhs << std::endl;
+            return tacString;
     }
     std::string decideOp()
     {
@@ -141,6 +151,12 @@ public:
     {
         std::cout << op << " " << rhs << std::endl;
     }
+    std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = op + " " + rhs;
+            return tacString;
+    }
 };
 class methodCallTac : public tac
 {
@@ -158,6 +174,12 @@ public:
         std::string tacVal = "( " + op + " " + lhs + " " + rhs + " )";
         variable* var = new variable(result,tacVal);
         SYMBOL_TABLE.putTemps(result,var);
+    }
+    std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = result + ":=" + op + " " + lhs + " " + rhs;
+            return tacString;
     }
 };
 

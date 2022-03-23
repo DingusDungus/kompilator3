@@ -11,7 +11,7 @@ class LinearSearch{
 class LS {
     int[] number ;
     int size ;
-
+    
     // Invoke methods to initialize, print and search
     // for elements on the array
     public int Start(int sz){
@@ -53,7 +53,7 @@ class LS {
 	j = 1 ;
 	ls01 = false ;
 	ifound = 0 ;
-
+	
 	//System.out.println(num);
 	while (j < (size)) {
 	    aux01 = number[j] ;
@@ -72,7 +72,7 @@ class LS {
     }
 
 
-
+    
     // initialize array of integers with some
     // some sequence
     public int Init(int sz){
@@ -83,7 +83,7 @@ class LS {
 
 	size = sz ;
 	number = new int[sz] ;
-
+	
 	j = 1 ;
 	k = size + 1 ;
 	while (j < (size)) {
@@ -93,7 +93,7 @@ class LS {
 	    j = j + 1 ;
 	    k = k - 1 ;
 	}
-	return 0 ;
+	return 0 ;	
     }
 
 }
