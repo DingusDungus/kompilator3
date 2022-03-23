@@ -277,6 +277,17 @@ void CFG::printBlocks()
     for (int i = 0; i < methodDecBlocks.size(); i++) {
         std::cout << "iteration: " << i << std::endl;
         printBlocksRec(methodDecBlocks[i]);
+        std::cout << std::endl;
+        if (methodDecBlocks[i]->trueExit != nullptr)
+        {
+            std::cout << "--TrueExit--" << std::endl;
+            printBlocksRec(methodDecBlocks[i]->trueExit);
+        }
+        if (methodDecBlocks[i]->falseExit != nullptr)
+        {
+            std::cout << "--FalseExit--" << std::endl;
+            printBlocksRec(methodDecBlocks[i]->falseExit);
+        }
     }
     return;
 }
