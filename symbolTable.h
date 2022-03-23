@@ -57,6 +57,7 @@ public:
     bool duplicatesFoundRec(scope *ptr);
 
     void put(std::string key, record *item);
+    void putTemps(std::string key, record *item);
     record *lookup(std::string key);
 };
 

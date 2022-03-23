@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <vector>
+#include "symbolTable.h"
+
+symbolTable extern SYMBOL_TABLE;
 
 struct byteCode
 {
@@ -21,6 +24,9 @@ public:
     virtual void dump()
     {
         std::cout << result << ":=" << lhs << op << rhs << std::endl;
+        std::string tacVal = "( " + lhs + " " + op + " " + rhs + " )";
+        variable* var = new variable(result,tacVal);
+        SYMBOL_TABLE.putTemps(result,var);
     }
     std::string decideOp()
     {

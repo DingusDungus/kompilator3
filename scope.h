@@ -31,6 +31,15 @@ public:
 class variable : public record
 {
 public:
+    variable()
+    {
+
+    }
+    variable(std::string p_id, std::string p_type)
+    {
+        id = p_id;
+        type = p_type;
+    }
 };
 
 class scope

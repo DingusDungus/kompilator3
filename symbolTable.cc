@@ -2,6 +2,7 @@
 #include "scope.h"
 #include <string>
 
+
 void symbolTable::stBuilderRec(Node *walker, Node *parent)
 {
     for (auto next = walker->children.begin(); next != walker->children.end(); next++)
@@ -139,6 +140,11 @@ void symbolTable::init(Node *root)
 {
     nodeRoot = root;
     stBuilder();
+}
+
+void symbolTable::putTemps(std::string key, record *item)
+{
+    root->put(key, item);
 }
 
 void symbolTable::put(std::string key, record *item)

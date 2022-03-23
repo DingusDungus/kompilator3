@@ -10,6 +10,7 @@ extern FILE *yyin;
 
 int blockNr = 0;
 std::vector<BBlock*> methodDecBlocks;
+symbolTable SYMBOL_TABLE;
 
 void yy::parser::error(std::string const &err)
 {
@@ -38,6 +39,7 @@ int main(int argc, char **argv)
   }
   ST.init(root);
   ST.printSTtree();
+  SYMBOL_TABLE = ST;
   semanticAnalyser SA(ST, root);
   if (SA.analyse() == -1)
   {
@@ -48,6 +50,7 @@ int main(int argc, char **argv)
   cfgGraph.buildIrNodeAST(root);
   cfgGraph.buildCFG();
   cfgGraph.printBlocks();
+  ST.printSTtree();
   cfgGraph.generate_tree();
 
   return 0;
