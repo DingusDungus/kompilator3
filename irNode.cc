@@ -177,8 +177,10 @@ tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
 retStruct *irNode::methodDec(BBlock *currentBlock)
 {
     std::string blockName = genBlkName();
-    BBlock *methodBlock = new BBlock(blockName);
-    for (int i = 3; i < child.size(); i++)
+    std::string methodName = child[0]->genIr(currentBlock)->value;
+    methodName = " ("+methodName+")";
+    BBlock *methodBlock = new BBlock(blockName+methodName);
+    for (int i = 0; i < child.size(); i++)
     {
         child[i]->genIr(methodBlock);
     }

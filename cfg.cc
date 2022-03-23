@@ -256,12 +256,10 @@ void CFG::printBlocks()
     }
     // print method declaration blocks
     std::cout << "--- Printing Method declaration blocks ---" << std::endl;
+    std::cout << "Size of methodDecBlocks array: " << methodDecBlocks.size() << std::endl;
     for (int i = 0; i < methodDecBlocks.size(); i++) {
-        std::cout << "Name: " << methodDecBlocks[i]->name << std::endl;
-        for (int i = 0; i < methodDecBlocks[i]->instructions.size(); i++)
-            {
-                methodDecBlocks[i]->instructions[i]->dump();
-            }
+        std::cout << "iteration: " << i << std::endl;
+        printBlocksRec(methodDecBlocks[i]);
     }
     return;
 }
