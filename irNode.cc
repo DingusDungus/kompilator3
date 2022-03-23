@@ -86,12 +86,7 @@ std::string irNode::genNameAssign(BBlock *currentBlk)
 
 std::string irNode::genName(BBlock *currentBlk)
 {
-    Node *parent = headNode->parent_node;
-    if (parent->type == "IF_ElseStatement" || parent->type == "WhileStatement" || parent->type == "SystemOutPrintStatement")
-    {
-        return parent->type;
-    }
-    else if (headNode->parent_node->type == "AssignStatement") 
+    if (headNode->parent_node->type == "AssignStatement") 
     {
         return (*headNode->parent_node->children.begin())->value;
     }
@@ -311,6 +306,21 @@ retStruct *irNode::express(BBlock *currentBlock)
         return new retStruct("empty expression", currentBlock);
     }
     currentBlock->instructions.push_back(in);
+    if (headNode->parent_node->type == "IF_ElseStatement")
+    {
+        tac *newTac = new expression("", name, "", "ifElse");
+        currentBlock->instructions.push_back(newTac);
+    }
+    else if (headNode->parent_node->type == "WhileStatement")
+    {
+        tac *newTac = new expression("", name, "", "while");
+        currentBlock->instructions.push_back(newTac);
+    }
+    else if (headNode->parent_node->type == "SystemOutPrintStatement")
+    {
+        tac *newTac = new expression("", name, "", "print");
+        currentBlock->instructions.push_back(newTac);
+    }
     return new retStruct(name, currentBlock);
 }
 
