@@ -16,7 +16,6 @@ CFG::CFG()
 {
     blockNr = 0;
     root = new BBlock(genBlkName());
-    currentBlk = root;
     nRoot = nullptr;
     iRoot = new irNode("connector");
 }
@@ -25,7 +24,6 @@ CFG::CFG(Node *_root)
 {
     blockNr = 0;
     root = new BBlock(genBlkName());
-    currentBlk = root;
     nRoot = _root;
     iRoot = new irNode("connector", nRoot);
 }
@@ -176,7 +174,8 @@ irNode *CFG::parseNodes(Node *ptr)
     // }
     else if (ptr->type == "MethodDeclaration")
     {
-        return new irNode("methodDec", ptr);
+        //return new irNode("methodDec", ptr);
+        return nullptr;
     }
     else if (ptr->type == "MethodCall")
     {
@@ -248,6 +247,9 @@ void CFG::printBlocks()
         ptr->instructions[i]->dump();
     }
     std::cout << std::endl;
+    std::cout << ptr->trueExit->name << std::endl;
+    ptr->trueExit->instructions[0]->dump();
+    /*
     if (ptr->trueExit != nullptr)
     {
         printBlocksRec(ptr->trueExit);
@@ -265,6 +267,7 @@ void CFG::printBlocks()
                 methodDecBlocks[i]->instructions[i]->dump();
             }
     }
+    */
     return;
 }
 

@@ -178,7 +178,8 @@ retStruct *irNode::methodDec(BBlock *currentBlock)
 {
     std::string blockName = genBlkName();
     BBlock *methodBlock = new BBlock(blockName);
-    for (int i = 3; i < child.size(); i++) {
+    for (int i = 3; i < child.size(); i++)
+    {
         child[i]->genIr(methodBlock);
     }
 
@@ -200,9 +201,10 @@ retStruct *irNode::methodCall(BBlock *currentBlock)
     currentBlock->instructions.push_back(scopeIn);
 
     // find params
-    std::vector<irNode*> params = child[2]->child;
+    std::vector<irNode *> params = child[2]->child;
     // loop through parameters
-    for (int i = 0; i < params.size(); i++) {
+    for (int i = 0; i < params.size(); i++)
+    {
         std::string param = params[i]->genIr(currentBlock)->value;
         std::cout << "param: " << param << std::endl;
         tac *paramIn = new parameter(param);
@@ -234,15 +236,16 @@ retStruct *irNode::printStmt(BBlock *currentBlock)
 retStruct *irNode::connector(BBlock *currentBlock)
 {
     retStruct *returnVal;
+    BBlock *ptr = currentBlock;
     for (int i = 0; i < child.size(); i++)
     {
-        returnVal = child[i]->genIr(currentBlock);
+        returnVal = child[i]->genIr(ptr);
         if (returnVal->value == "ifElse-joinBlock" || returnVal->value == "while-statement-falseBlock")
         {
-            currentBlock = returnVal->bblock;
+            ptr = returnVal->bblock;
         }
     }
-    return new retStruct("connector", currentBlock);
+    return new retStruct("connector", ptr);
 }
 
 // assign-statement
@@ -259,13 +262,15 @@ retStruct *irNode::assignStmt(BBlock *currentBlock)
     }
     if (lhs && rhs && headNode)
     { // only create instruction if things are not nullptr
-        if (child[1]->headNode->type == "MethodCall"){
+        if (child[1]->headNode->type == "MethodCall")
+        {
             // Is NOT a methodCall
             tac *in = new expression("", "", rhs->value, name);
             currentBlock->instructions.push_back(in);
             std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
         }
-        else {
+        else
+        {
             // Is NOT a methodCall
             tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
             currentBlock->instructions.push_back(in);
@@ -343,19 +348,15 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     {
         std::cout << "\n";
     }
-    std::cout << "Trueblock\n";
+    std::cout << "Trueblock " << trueBlock->name << "\n";
     for (int i = 0; i < trueBlock->instructions.size(); i++)
     {
         trueBlock->instructions[i]->dump();
-        std::cout << "\n"
-                  << child[1]->headNode->type;
     }
-    std::cout << "\nFalseblock\n";
+    std::cout << "\nfalseblock " << falseBlock->name << "\n";
     for (int i = 0; i < falseBlock->instructions.size(); i++)
     {
         falseBlock->instructions[i]->dump();
-        std::cout << "\n"
-                  << child[2]->headNode->type;
     }
     for (int i = 0; i < 5; i++)
     {
@@ -376,21 +377,40 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
     if (child[0]->child.size() > 0)
     {
         child[0]->child[0]->genIr(currentBlock);
-        if (child[0]->child.size() > 1)
-        {
-            child[0]->child[1]->genIr(currentBlock);
-        }
     }
-    BBlock *trueBlock = new BBlock;
+    BBlock *trueBlock = new BBlock(genBlkName());
     lhs = child[1]->genIr(trueBlock);
-    BBlock *falseBlock = new BBlock;
+    currentBlock->trueExit = trueBlock;
+    lhs->bblock->trueExit = currentBlock;
+    BBlock *falseBlock = new BBlock(genBlkName());
 
     tac *in = genCondTac((*headNode->children.begin()), currentBlock);
     currentBlock->instructions.push_back(in);
 
-    currentBlock->trueExit = trueBlock;
     lhs->bblock->trueExit = currentBlock;
     currentBlock->falseExit = falseBlock;
+    for (int i = 0; i < 5; i++)
+    {
+        std::cout << "\n";
+    }
+    std::cout << "while-Trueblock " << trueBlock->name << "\n";
+    for (int i = 0; i < trueBlock->instructions.size(); i++)
+    {
+        trueBlock->instructions[i]->dump();
+        std::cout << "\n"
+                  << child[1]->headNode->type;
+    }
+    std::cout << "\nwhile-falseblock " << falseBlock->name << "\n";
+    for (int i = 0; i < falseBlock->instructions.size(); i++)
+    {
+        falseBlock->instructions[i]->dump();
+        std::cout << "\n"
+                  << child[2]->headNode->type;
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        std::cout << "\n";
+    }
 
     return new retStruct("while-statement-falseBlock", falseBlock);
 }

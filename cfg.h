@@ -16,7 +16,6 @@ class CFG
 {
 private:
     BBlock *root;
-    BBlock *currentBlk;
     std::vector<tac *> temp;
     std::string genBlkName();
     irNode *expression(Node *);
