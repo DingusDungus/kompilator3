@@ -140,9 +140,6 @@ public:
     void dump() override
     {
         std::cout << op << " " << rhs << std::endl;
-        std::string tacVal = "( " + op + " " + rhs + " )";
-        variable* var = new variable(result,tacVal);
-        SYMBOL_TABLE.putTemps(result,var);
     }
 };
 class methodCallTac : public tac

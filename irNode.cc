@@ -202,7 +202,10 @@ retStruct *irNode::methodCall(BBlock *currentBlock)
     currentBlock->instructions.push_back(scopeIn);
 
     // find params
-    std::vector<irNode *> params = child[2]->child;
+    std::vector<irNode *> params;
+    if (child[2] != nullptr){
+        params = child[2]->child;
+    }
     // loop through parameters
     for (int i = 0; i < params.size(); i++)
     {
