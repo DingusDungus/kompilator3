@@ -2,10 +2,12 @@
 #define TAC_H
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include "symbolTable.h"
 
 symbolTable extern SYMBOL_TABLE;
+int extern printNr;
 
 struct byteCode
 {
@@ -117,6 +119,11 @@ public:
         lhs = _y;
         rhs = _z;
         result = _result;
+        if (_result == "print")
+        {
+            result = result + std::to_string(printNr);
+            printNr++;
+        }
     }
 };
 
@@ -133,6 +140,9 @@ public:
     void dump() override
     {
         std::cout << op << " " << rhs << std::endl;
+        std::string tacVal = "( " + op + " " + rhs + " )";
+        variable* var = new variable(result,tacVal);
+        SYMBOL_TABLE.putTemps(result,var);
     }
 };
 class methodCallTac : public tac
@@ -148,6 +158,9 @@ public:
     void dump() override
     {
         std::cout << result << ":=" << op << " " << lhs << " " << rhs << std::endl;
+        std::string tacVal = "( " + op + " " + lhs + " " + rhs + " )";
+        variable* var = new variable(result,tacVal);
+        SYMBOL_TABLE.putTemps(result,var);
     }
 };
 
