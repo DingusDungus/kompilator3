@@ -174,8 +174,7 @@ irNode *CFG::parseNodes(Node *ptr)
     // }
     else if (ptr->type == "MethodDeclaration")
     {
-        //return new irNode("methodDec", ptr);
-        return nullptr;
+        return new irNode("methodDec", ptr);
     }
     else if (ptr->type == "MethodCall")
     {
@@ -247,9 +246,6 @@ void CFG::printBlocks()
         ptr->instructions[i]->dump();
     }
     std::cout << std::endl;
-    std::cout << ptr->trueExit->name << std::endl;
-    ptr->trueExit->instructions[0]->dump();
-    /*
     if (ptr->trueExit != nullptr)
     {
         printBlocksRec(ptr->trueExit);
@@ -267,7 +263,6 @@ void CFG::printBlocks()
                 methodDecBlocks[i]->instructions[i]->dump();
             }
     }
-    */
     return;
 }
 
