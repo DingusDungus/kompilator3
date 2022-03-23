@@ -40,13 +40,7 @@ public:
     Node *searchTree(Node *root, std::string value);
     void printBlocks();
     void printBlocksRec(BBlock *ptr);
-
-    // seg faults REEEEEEEEEEEEEEEE
-    void generate_tree()
-    {
-        root->generate_tree();
-    }
-
+    void generate_tree();
 };
 
 #endif

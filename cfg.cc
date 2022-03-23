@@ -3,7 +3,7 @@
 #include "irNode.h"
 
 int extern blockNr;
-std::vector<BBlock*> extern methodDecBlocks;
+std::vector<BBlock *> extern methodDecBlocks;
 
 std::string CFG::genBlkName()
 {
@@ -227,9 +227,26 @@ void CFG::printPostOrder()
     }
 }
 
-void CFG::printBlocks()
+void CFG::generate_tree()
 {
     iRoot->generate_tree();
+
+    std::ofstream outStream;
+    outStream.open("cfgTree.dot");
+    outStream << "digraph {" << std::endl;
+
+    int count = root->generate_tree(outStream, 0);
+    for (int i = 0; i < methodDecBlocks.size(); i++)
+    {
+        count = methodDecBlocks[i]->generate_tree(outStream, count);
+    }
+
+    outStream << "}" << std::endl;
+    outStream.close();
+}
+
+void CFG::printBlocks()
+{
     std::cout << std::endl
               << "Printing blocks..." << std::endl;
     std::cout << "method declarations: " << methodDecBlocks.size() << std::endl;
