@@ -3,6 +3,7 @@
 #include <string>
 
 int extern blockNr;
+int extern tempNr;
 std::vector<BBlock *> extern methodDecBlocks;
 
 // base-class
@@ -99,8 +100,8 @@ std::string irNode::genName(BBlock *currentBlk)
 std::string irNode::genTempName(BBlock *currentBlk)
 {
     {
-        std::string temp = "_T" + std::to_string(currentBlk->tempCount);
-        currentBlk->tempCount++;
+        std::string temp = "_T" + std::to_string(tempNr);
+        tempNr++;
         return temp;
     }
 }
@@ -469,7 +470,7 @@ retStruct *irNode::boolean(BBlock *currentBlock)
 // temp
 retStruct *irNode::temp(BBlock *currentBlock)
 {
-    std::string tempName = "_" + std::to_string(currentBlock->tempCount);
-    currentBlock->tempCount++;
+    std::string tempName = "_" + std::to_string(tempNr);
+    tempNr++;
     return new retStruct(tempName, nullptr);
 }

@@ -9,6 +9,7 @@ extern Node *root;
 extern FILE *yyin;
 
 int blockNr = 0;
+int tempNr = 0;
 int printNr = 0;
 std::vector<BBlock*> methodDecBlocks;
 symbolTable SYMBOL_TABLE;
