@@ -4,6 +4,7 @@
 
 int extern blockNr;
 std::vector<BBlock *> extern methodDecBlocks;
+symbolTable extern SYMBOL_TABLE;
 
 std::string CFG::genBlkName()
 {
