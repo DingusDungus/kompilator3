@@ -266,14 +266,21 @@ retStruct *irNode::assignStmt(BBlock *currentBlock)
     { // only create instruction if things are not nullptr
         if (child[1]->headNode->type == "MethodCall")
         {
-            // Is NOT a methodCall
+            // Is a methodCall
+            tac *in = new expression("", "", rhs->value, name);
+            currentBlock->instructions.push_back(in);
+            std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
+        }
+        else if (child[1]->headNode->type == "Identifier")
+        {
+            // Is a Identifier
             tac *in = new expression("", "", rhs->value, name);
             currentBlock->instructions.push_back(in);
             std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;
         }
         else
         {
-            // Is NOT a methodCall
+            // Default case
             tac *in = new expression(" " + child[1]->headNode->type + " ", lhs->value, rhs->value, name);
             currentBlock->instructions.push_back(in);
             std::cout << in->result << ":=" << in->lhs << in->op << in->rhs << std::endl;

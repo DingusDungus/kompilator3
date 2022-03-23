@@ -36,6 +36,7 @@
 tree.pdf
 tree.dot
 irTree.dot
+cfgTree.dot
 *.cache/
 *.vscode/
 *.vscode/settings.json
