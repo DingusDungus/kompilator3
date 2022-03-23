@@ -279,7 +279,6 @@ void CFG::printBlocks()
     std::cout << "--- Printing Method declaration blocks ---" << std::endl;
     std::cout << "Size of methodDecBlocks array: " << methodDecBlocks.size() << std::endl;
     for (int i = 0; i < methodDecBlocks.size(); i++) {
-        std::cout << "iteration: " << i << std::endl;
         printBlocksRec(methodDecBlocks[i]);
         std::cout << std::endl;
         if (methodDecBlocks[i]->trueExit != nullptr)

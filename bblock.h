@@ -35,10 +35,10 @@ public:
     {
         id = count++;
         visited = false;
-        *outStream << "n" << id << " [label=\"" << name << "\n\l";
+        *outStream << "n" << id << " [label=\"" << name << "\n";
         for (int i = 0; i < instructions.size(); i++)
         {
-            *outStream << instructions[i]->result << " : " << instructions[i]->lhs << " : " << instructions[i]->op << " : " << instructions[i]->rhs << "\l" << endl;
+            *outStream << instructions[i]->getTacStream() << "" << endl;
         }
         *outStream << "\"];" << endl;
         if (trueExit != nullptr && trueExit->visited != false)

@@ -3,6 +3,7 @@
 #include <string>
 
 int extern blockNr;
+int extern tempNr;
 std::vector<BBlock *> extern methodDecBlocks;
 
 // base-class
@@ -99,8 +100,8 @@ std::string irNode::genName(BBlock *currentBlk)
 std::string irNode::genTempName(BBlock *currentBlk)
 {
     {
-        std::string temp = "_T" + std::to_string(currentBlk->tempCount);
-        currentBlk->tempCount++;
+        std::string temp = "_T" + std::to_string(tempNr);
+        tempNr++;
         return temp;
     }
 }
@@ -140,7 +141,7 @@ std::string irNode::getBoolName(Node *node, BBlock *currentBlock)
     return " ";
 }
 
-tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
+tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock, std::string tempName)
 {
     tac *condTac = new tac;
     condTac->result = "condJump";
@@ -154,6 +155,13 @@ tac *irNode::genCondTac(Node *ptr, BBlock *currentBlock)
     {
         condTac->op = " " + ptr->type + " ";
         condTac->lhs = getBoolName((*child), currentBlock);
+        return condTac;
+    }
+    else if (ptr->type == "MethodCall")
+    {
+        condTac->op = "";
+        condTac->lhs = "";
+        condTac->rhs = tempName;
         return condTac;
     }
     condTac->op = " " + ptr->type + " ";
@@ -202,7 +210,10 @@ retStruct *irNode::methodCall(BBlock *currentBlock)
     currentBlock->instructions.push_back(scopeIn);
 
     // find params
-    std::vector<irNode *> params = child[2]->child;
+    std::vector<irNode *> params;
+    if (child[2] != nullptr){
+        params = child[2]->child;
+    }
     // loop through parameters
     for (int i = 0; i < params.size(); i++)
     {
@@ -342,16 +353,9 @@ retStruct *irNode::notOp(BBlock *currentBlock)
 // if-else
 retStruct *irNode::ifElse(BBlock *currentBlock)
 {
-    if (child[0]->child.size() > 0)
-    {
-        child[0]->child[0]->genIr(currentBlock);
-        if (child[0]->child.size() > 1)
-        {
-            child[0]->child[1]->genIr(currentBlock);
-        }
-    }
+    std::string tempName = child[0]->genIr(currentBlock)->value;
 
-    tac *in = genCondTac((*headNode->children.begin()), currentBlock);
+    tac *in = genCondTac((*headNode->children.begin()), currentBlock, tempName);
 
     BBlock *trueBlock = new BBlock(genBlkName());
     BBlock *falseBlock = new BBlock(genBlkName());
@@ -466,7 +470,7 @@ retStruct *irNode::boolean(BBlock *currentBlock)
 // temp
 retStruct *irNode::temp(BBlock *currentBlock)
 {
-    std::string tempName = "_" + std::to_string(currentBlock->tempCount);
-    currentBlock->tempCount++;
+    std::string tempName = "_" + std::to_string(tempNr);
+    tempNr++;
     return new retStruct(tempName, nullptr);
 }

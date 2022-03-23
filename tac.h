@@ -2,10 +2,15 @@
 #define TAC_H
 
 #include <iostream>
+#include <string>
 #include <vector>
+#include <fstream>
+#include <unistd.h>
+#include <sys/wait.h>
 #include "symbolTable.h"
 
 symbolTable extern SYMBOL_TABLE;
+int extern printNr;
 
 struct byteCode
 {
@@ -36,6 +41,13 @@ public:
                 return false;
         }
         return true;
+    }
+    virtual std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = result + ":=" + lhs + " " + op + " " + rhs;
+            std::cout << result << ":=" << lhs << op << rhs << std::endl;
+            return tacString;
     }
     std::string decideOp()
     {
@@ -253,6 +265,11 @@ public:
         lhs = _y;
         rhs = _z;
         result = _result;
+        if (_result == "print")
+        {
+            result = result + std::to_string(printNr);
+            printNr++;
+        }
     }
 };
 
@@ -270,6 +287,12 @@ public:
     {
         std::cout << op << " " << rhs << std::endl;
     }
+    std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = op + " " + rhs;
+            return tacString;
+    }
 };
 class methodCallTac : public tac
 {
@@ -284,6 +307,15 @@ public:
     void dump() override
     {
         std::cout << result << ":=" << op << " " << lhs << " " << rhs << std::endl;
+        std::string tacVal = "( " + op + " " + lhs + " " + rhs + " )";
+        variable* var = new variable(result,tacVal);
+        SYMBOL_TABLE.putTemps(result,var);
+    }
+    std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = result + ":=" + op + " " + lhs + " " + rhs;
+            return tacString;
     }
 };
 
