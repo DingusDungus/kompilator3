@@ -152,11 +152,11 @@ irNode *CFG::parseNodes(Node *ptr)
     else if (ptr->type == "SystemOutPrintStatement")
     {
         return new irNode("printStmt", ptr);
-    }
+    }/*
     else if (ptr->type == "AssignStatement")
     {
         return new irNode("assignStmt", ptr);
-    }
+    }*/
     else if (ptr->type == "IF_ElseStatement")
     {
         return new irNode("ifElse", ptr);

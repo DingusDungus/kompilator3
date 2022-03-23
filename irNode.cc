@@ -91,6 +91,10 @@ std::string irNode::genName(BBlock *currentBlk)
     {
         return parent->type;
     }
+    else if (headNode->parent_node->type == "AssignStatement") 
+    {
+        return (*headNode->parent_node->children.begin())->value;
+    }
     else
     {
         return genTempName(currentBlk);
