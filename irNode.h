@@ -41,7 +41,7 @@ private:
     retStruct *boolExp(BBlock *currentBlock);
     retStruct *printStmt(BBlock *currentBlock);
     std::string getBoolName(Node *node, BBlock *currentBlock);
-    tac *genCondTac(Node *node, BBlock *currentBlock);
+    tac *genCondTac(Node *node, BBlock *currentBlock, std::string tempName = "");
 
     retStruct *temp(BBlock *currentBlock);
 
