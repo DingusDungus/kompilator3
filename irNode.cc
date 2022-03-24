@@ -420,24 +420,24 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
         // std::cout << "while lhs block trueExit: " << lhs->bblock->trueExit->name << std::endl;
         // std::cout << "while lhs block falseExit: " << lhs->bblock->falseExit->name << std::endl;
     }
-    BBlock *falseBlock = new BBlock(genBlkName() + "( while_joinBlock )");
+    BBlock *joinBlock = new BBlock(genBlkName() + "( while_joinBlock )");
 
     tac *in = genCondTac((*headNode->children.begin()), currentBlock);
     headBlock->instructions.push_back(in);
 
     std::cout << "while headBlock: " << headBlock->name << std::endl;
     std::cout << "while trueBlock: " << trueBlock->name << std::endl;
-    std::cout << "while falseBlock (joinBlock): " << falseBlock->name << std::endl;
+    std::cout << "while joinBlock: " << joinBlock->name << std::endl;
     std::cout << "while currentBlock: " << currentBlock->name << std::endl;
 
     // link blocks
     currentBlock->trueExit = headBlock;
     headBlock->trueExit = trueBlock;
-    headBlock->falseExit = falseBlock;
+    headBlock->falseExit = joinBlock;
     lhs->bblock->trueExit = headBlock;
-    lhs->bblock->falseExit = falseBlock;
+    lhs->bblock->falseExit = joinBlock;
 
-    return new retStruct("while-statement-falseBlock", falseBlock);
+    return new retStruct("while-statement-falseBlock", joinBlock);
 }
 
 // identifier
