@@ -215,11 +215,11 @@ void interpreter::iconst()
 
 stackEntry *interpreter::searchStack(std::string name)
 {
-    for (int i = 0; i < entries.size(); i++)
+    for (auto i = entries.begin(); i != entries.end(); i++)
     {
-        if (name == entries[i]->varName)
+        if (name == (*i)->varName)
         {
-            return entries[i];
+            return (*i);
         }
     }
     return nullptr;
@@ -229,18 +229,18 @@ void interpreter::pop()
 {
     if (lineVector[3] == "L")
     {
-        stackEntry *entry = entries[0];
+        stackEntry *entry = entries.front();
+        entries.pop_front();
         lhs = entry->value;
         std::cout << "load: " << lineVector[2] << " " << lhs << std::endl;
-        entries.erase(entries.begin());
         isLhs = false;
     }
     else
     {
-        stackEntry *entry = entries[0];
+        stackEntry *entry = entries.front();
+        entries.pop_front();
         rhs = entry->value;
         std::cout << "load: " << lineVector[2] << " " << rhs<< std::endl;
-        entries.erase(entries.begin());
     }
 }
 void interpreter::put()

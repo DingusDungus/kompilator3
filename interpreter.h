@@ -2,6 +2,7 @@
 #define INTERPRETER_H
 
 #include <iostream>
+#include <stack>
 #include <string>
 #include <sstream>
 #include <iterator>
@@ -27,7 +28,7 @@ private:
     bool isLhs;
 
     void parseLine(std::string line);
-    std::vector<stackEntry *> entries;
+    std::deque<stackEntry *> entries;
     std::vector<std::string> lineVector;
 
     bool parse(std::string line);
