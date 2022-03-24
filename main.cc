@@ -53,12 +53,12 @@ int main(int argc, char **argv)
   CFG cfgGraph(root);
   cfgGraph.buildIrNodeAST(root);
   cfgGraph.buildCFG();
-  cfgGraph.printBlocks();
-  ST.printSTtree();
+  // cfgGraph.printBlocks();
+  // ST.printSTtree();
   cfgGraph.generate_tree();
-  cfgGraph.genByteCode();
+  // cfgGraph.genByteCode();
 
-  it.interpret(); // disable for testing IR on Cambridge files.
+  // it.interpret(); // disable for testing IR on Cambridge files.
 
   return 0;
 }

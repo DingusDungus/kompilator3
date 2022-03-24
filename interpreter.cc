@@ -182,7 +182,7 @@ int interpreter::eqOp()
 }
 void interpreter::print()
 {
-    std::cout << temp << std::endl;
+    std::cout << "Print: " << temp << std::endl;
 }
 void interpreter::load()
 {
@@ -247,18 +247,10 @@ void interpreter::put()
 {
     if (lineVector[2].length() > 0)
     {
-        std::cout << "store: " << lineVector[2] << std::endl;
-        stackEntry *var = searchStack(lineVector[2]);
-        if (var != nullptr)
-        {
-            std::cout << temp << "\n";
-            var->value = temp;
-        }
-        else
-        {
-            var = new stackEntry(lineVector[2], temp);
-            entries.push_back(var);
-        }
+        std::cout << "store: " << lineVector[2] << " : ";
+        std::cout << temp << "\n";
+        stackEntry *var = new stackEntry(lineVector[2], temp);
+        entries.push_back(var);
     }
     isLhs = true;
 }

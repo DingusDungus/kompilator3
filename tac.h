@@ -336,6 +336,29 @@ public:
             return tacString;
     }
 };
+
+class tacPrintOut : public tac
+{
+public:
+    tacPrintOut(std::string _p)
+    {
+        op = "print";
+        lhs = "";
+        rhs = _p;
+        result = "";
+    }
+    void dump() override
+    {
+        std::cout << op << " " << rhs << std::endl;
+    }
+    std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = op + " " + rhs;
+            return tacString;
+    }
+};
+
 class methodCallTac : public tac
 {
 public:

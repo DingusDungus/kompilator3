@@ -187,10 +187,14 @@ retStruct *irNode::methodDec(BBlock *currentBlock)
     std::string methodName = child[0]->genIr(currentBlock)->value;
     methodName = " ("+methodName+")";
     BBlock *methodBlock = new BBlock(blockName+methodName);
-    for (int i = 0; i < child.size(); i++)
+    for (int i = 0; i < child.size()-1; i++)
     {
-        child[i]->genIr(methodBlock);
+        lhs = child[i]->genIr(methodBlock);
     }
+    std::string returnIr = child[child.size()-1]->genIr(lhs->bblock)->value;
+    std::cout << "method return block: " << returnIr << std::endl;
+    lhs->bblock->trueExit = methodBlock;
+    // methodBlock->falseExit = lhs->bblock; // arrows wrong way, 
 
     methodDecBlocks.push_back(methodBlock);
     return new retStruct("methodDec", methodBlock);
@@ -240,6 +244,9 @@ retStruct *irNode::printStmt(BBlock *currentBlock)
     if (child.size() > 0)
     {
         lhs = child[0]->genIr(currentBlock);
+        std::cout << "PRINT_STMT: " << lhs->value << "block: " << currentBlock->name << std::endl;
+        tac *printIn = new tacPrintOut(lhs->value);
+        currentBlock->instructions.push_back(printIn);
     }
     return new retStruct("printStmt", currentBlock);
 }
@@ -253,7 +260,7 @@ retStruct *irNode::returnExp(BBlock *currentBlock)
     }
     tac* in = new tacReturnExp(lhs->value);
     currentBlock->instructions.push_back(in);
-    return new retStruct("returnExp", currentBlock);
+    return new retStruct(lhs->value, currentBlock);
 }
 
 // Connector
@@ -370,16 +377,28 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     tac *in = genCondTac((*headNode->children.begin()), currentBlock, tempName);
     currentBlock->instructions.push_back(in);
 
-    BBlock *trueBlock = new BBlock(genBlkName());
-    BBlock *falseBlock = new BBlock(genBlkName());
-    BBlock *joinBlock = new BBlock(genBlkName());
+    BBlock *trueBlock = new BBlock(genBlkName() + "( IfElse_trueBlock )");
+    BBlock *falseBlock = new BBlock(genBlkName() + "( IfElse_falseBlock )");
+    BBlock *joinBlock = new BBlock(genBlkName() + "( IfElse_joinBlock )");
 
-    lhs = child[1]->genIr(trueBlock);
-    rhs = child[2]->genIr(falseBlock);
+    if (child[1] != nullptr){
+        lhs = child[1]->genIr(trueBlock);
+        std::cout << "IfElse lhs_block: " << lhs->bblock->name << std::endl;
+        lhs->bblock->trueExit = joinBlock;
+    }
+    if (child[2] != nullptr){
+        rhs = child[2]->genIr(falseBlock);
+        std::cout << "IfElse rhs_block: " << rhs->bblock->name << std::endl;
+        rhs->bblock->trueExit = joinBlock;
+    }
 
+    std::cout << "IfElse currentBlock: " << currentBlock->name << std::endl;
+    std::cout << "IfElse joinBlock: " << joinBlock->name << std::endl;
+    std::cout << "IfElse trueBlock: " << trueBlock->name << std::endl;
+    std::cout << "IfElse falseBlock: " << falseBlock->name << std::endl;
     // link blocks
-    lhs->bblock->trueExit = joinBlock;
-    rhs->bblock->trueExit = joinBlock;
+    trueBlock->trueExit = joinBlock;
+    falseBlock->trueExit = joinBlock;
     currentBlock->trueExit = trueBlock;
     currentBlock->falseExit = falseBlock;
 
@@ -389,16 +408,27 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
 // while
 retStruct *irNode::whileStmt(BBlock *currentBlock)
 {
-    BBlock *headBlock = new BBlock(genBlkName());
+    BBlock *headBlock = new BBlock(genBlkName() + "( while_headBlock )");
     for (int i = 0; i < child[0]->child.size(); i++) {
-        child[0]->child[i]->genIr(headBlock);
+        rhs = child[0]->child[i]->genIr(headBlock);
+        std::cout << "while rhs block: " << rhs->bblock->name << std::endl;
     }
-    BBlock *trueBlock = new BBlock(genBlkName());
-    lhs = child[1]->genIr(trueBlock);
-    BBlock *falseBlock = new BBlock(genBlkName());
+    BBlock *trueBlock = new BBlock(genBlkName() + "( while_body/trueBlock )");
+    if (child[1] != nullptr){
+        lhs = child[1]->genIr(trueBlock);
+        std::cout << "while lhs block: " << lhs->bblock->name << std::endl;
+        // std::cout << "while lhs block trueExit: " << lhs->bblock->trueExit->name << std::endl;
+        // std::cout << "while lhs block falseExit: " << lhs->bblock->falseExit->name << std::endl;
+    }
+    BBlock *falseBlock = new BBlock(genBlkName() + "( while_joinBlock )");
 
     tac *in = genCondTac((*headNode->children.begin()), currentBlock);
     headBlock->instructions.push_back(in);
+
+    std::cout << "while headBlock: " << headBlock->name << std::endl;
+    std::cout << "while trueBlock: " << trueBlock->name << std::endl;
+    std::cout << "while falseBlock (joinBlock): " << falseBlock->name << std::endl;
+    std::cout << "while currentBlock: " << currentBlock->name << std::endl;
 
     // link blocks
     currentBlock->trueExit = headBlock;
