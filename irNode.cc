@@ -368,6 +368,7 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     std::string tempName = child[0]->genIr(currentBlock)->value;
 
     tac *in = genCondTac((*headNode->children.begin()), currentBlock, tempName);
+    currentBlock->instructions.push_back(in);
 
     BBlock *trueBlock = new BBlock(genBlkName());
     BBlock *falseBlock = new BBlock(genBlkName());
@@ -376,8 +377,7 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     lhs = child[1]->genIr(trueBlock);
     rhs = child[2]->genIr(falseBlock);
 
-    currentBlock->instructions.push_back(in);
-
+    // link blocks
     lhs->bblock->trueExit = joinBlock;
     rhs->bblock->trueExit = joinBlock;
     currentBlock->trueExit = trueBlock;
@@ -400,6 +400,7 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
     tac *in = genCondTac((*headNode->children.begin()), currentBlock);
     headBlock->instructions.push_back(in);
 
+    // link blocks
     currentBlock->trueExit = headBlock;
     headBlock->trueExit = trueBlock;
     lhs->bblock->trueExit = headBlock;
