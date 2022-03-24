@@ -1,6 +1,11 @@
 class BigBoyClass {
     public static void main(String[] args) {
-        System.out.println(test.Meth(69,true));
+        if (number > 5) {
+            val = false;
+        } else {
+            val = true;
+            number = test.Meth(number, val);
+        }
     }
 }
 
