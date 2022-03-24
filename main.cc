@@ -4,6 +4,7 @@
 #include "symbolTable.h"
 #include "semanticAnalyser.h"
 #include "cfg.h"
+#include "interpreter.h"
 
 extern Node *root;
 extern FILE *yyin;
@@ -43,6 +44,7 @@ int main(int argc, char **argv)
   ST.printSTtree();
   SYMBOL_TABLE = ST;
   semanticAnalyser SA(ST, root);
+  interpreter it;
   if (SA.analyse() == -1)
   {
     std::cout << "Duplicate found!!\n";
@@ -54,6 +56,9 @@ int main(int argc, char **argv)
   cfgGraph.printBlocks();
   ST.printSTtree();
   cfgGraph.generate_tree();
+  cfgGraph.genByteCode();
+
+  it.interpret();
 
   return 0;
 }

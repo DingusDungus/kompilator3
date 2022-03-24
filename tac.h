@@ -51,45 +51,45 @@ public:
     }
     std::string decideOp()
     {
-        if (op == "AddOP")
+        if (op == " AddOP ")
         {
-            return "iadd ";
+            return "iadd";
         }
-        else if (op == "SubOP")
+        else if (op == " SubOP ")
         {
-            return "isub ";
+            return "isub";
         }
-        else if (op == "MultOP")
+        else if (op == " MultOP ")
         {
-            return "imul ";
+            return "imul";
         }
-        else if (op == "DivOP")
+        else if (op == " DivOP ")
         {
-            return "idiv ";
+            return "idiv";
         }
-        else if (op == "AndOP")
+        else if (op == " AndOP ")
         {
-            return "iand ";
+            return "iand";
         }
-        else if (op == "OrOP")
+        else if (op == " OrOP ")
         {
-            return "ior ";
+            return "ior";
         }
-        else if (op == "NotOP")
+        else if (op == " NotOP ")
         {
-            return "inot ";
+            return "inot";
         }
-        else if (op == "LesserOp")
+        else if (op == " LesserOP ")
         {
-            return "ilt ";
+            return "ilt";
         }
-        else if (op == "GreaterOp")
+        else if (op == " GreaterOP ")
         {
-            return "igt ";
+            return "igt";
         }
-        else if (op == "EqualsOp")
+        else if (op == " EqualsOP ")
         {
-            return "ieq ";
+            return "ieq";
         }
         else
         {
@@ -98,7 +98,7 @@ public:
     }
     std::string decideIn()
     {
-        if (result == "print")
+        if (isPrint(result))
         {
             return "print";
         }
@@ -120,49 +120,61 @@ public:
         }
     }
 
+    bool isPrint(std::string name)
+    {
+        if (name.length() >= 5)
+        {
+            if (name.substr(0, 5) == "print")
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     int decideId(std::string name)
     {
-        if (name == "AddOP")
+        if (name == " AddOP ")
         {
             return 3;
         }
-        else if (name == "SubOP")
+        else if (name == " SubOP ")
         {
             return 4;
         }
-        else if (name == "MultOP")
+        else if (name == " MultOP ")
         {
             return 5;
         }
-        else if (name == "DivOP")
+        else if (name == " DivOP ")
         {
             return 6;
         }
-        else if (name == "AndOP")
+        else if (name == " AndOP ")
         {
             return 7;
         }
-        else if (name == "OrOP")
+        else if (name == " OrOP ")
         {
             return 8;
         }
-        else if (name == "NotOP")
+        else if (name == " NotOP ")
         {
             return 9;
         }
-        else if (name == "LesserOp")
+        else if (name == " LesserOP ")
         {
             return 10;
         }
-        else if (name == "GreaterOp")
+        else if (name == " GreaterOP ")
         {
             return 11;
         }
-        else if (name == "EqualsOp")
+        else if (name == " EqualsOP ")
         {
             return 12;
         }
-        else if (name == "print")
+        else if (isPrint(name))
         {
             return 13;
         }
@@ -203,7 +215,7 @@ public:
             }
             else
             {
-                byteCode *newByteCode = new byteCode(0, "iload " + rhs);
+                byteCode *newByteCode = new byteCode(0, "iload " + lhs);
                 bytecodes.push_back(newByteCode);
             }
         }
@@ -219,7 +231,7 @@ public:
                 {
                     rhs = "0";
                 }
-                byteCode *newByteCode = new byteCode(2, "iconst " + rhs);
+                byteCode *newByteCode = new byteCode(1, "iconst " + rhs);
                 bytecodes.push_back(newByteCode);
             }
             else
@@ -230,7 +242,7 @@ public:
         }
         if (op.length() > 0)
         {
-            byteCode *newByteCode = new byteCode(decideId(rhs), (decideOp() + rhs));
+            byteCode *newByteCode = new byteCode(decideId(op), decideOp());
             bytecodes.push_back(newByteCode);
         }
         if (result.length() > 0)
@@ -238,7 +250,15 @@ public:
             std::string instruction = decideIn();
             if (instruction == "print" || instruction == "stop")
             {
-                byteCode *newByteCode = new byteCode(decideId(result), instruction);
+                byteCode *newByteCode;
+                if (instruction == "print")
+                {
+                    newByteCode = new byteCode(decideId(result), instruction + " " + lhs);
+                }
+                else
+                {
+                    newByteCode = new byteCode(decideId(result), instruction);
+                }
                 bytecodes.push_back(newByteCode);
             }
             else
