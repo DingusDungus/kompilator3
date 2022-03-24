@@ -210,12 +210,12 @@ public:
                 {
                     lhs = "0";
                 }
-                byteCode *newByteCode = new byteCode(1, "iconst " + lhs);
+                byteCode *newByteCode = new byteCode(1, "iconst " + lhs + " L");
                 bytecodes.push_back(newByteCode);
             }
             else
             {
-                byteCode *newByteCode = new byteCode(0, "iload " + lhs);
+                byteCode *newByteCode = new byteCode(0, "iload " + lhs + " L");
                 bytecodes.push_back(newByteCode);
             }
         }
@@ -231,12 +231,12 @@ public:
                 {
                     rhs = "0";
                 }
-                byteCode *newByteCode = new byteCode(1, "iconst " + rhs);
+                byteCode *newByteCode = new byteCode(1, "iconst " + rhs + " R");
                 bytecodes.push_back(newByteCode);
             }
             else
             {
-                byteCode *newByteCode = new byteCode(0, "iload " + rhs);
+                byteCode *newByteCode = new byteCode(0, "iload " + rhs + " R");
                 bytecodes.push_back(newByteCode);
             }
         }

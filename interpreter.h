@@ -52,6 +52,7 @@ private:
 
     void pop();
     void put();
+    void pop_element(std::string name);
 
 public:
     interpreter();

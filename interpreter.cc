@@ -92,19 +92,27 @@ bool interpreter::parse(std::string line)
 
 int interpreter::addOp()
 {
+    std::cout << "add: " << std::to_string(lhs) << " " << std::to_string(rhs) << std::endl;
     temp = lhs + rhs;
+    std::cout << "Result: " << temp << std::endl;
 }
 int interpreter::subOp()
 {
+    std::cout << "sub: " << std::to_string(lhs) << " " << std::to_string(rhs) << std::endl;
     temp = lhs - rhs;
+    std::cout << "Result: " << temp << std::endl;
 }
 int interpreter::mulOp()
 {
+    std::cout << "mul: " << std::to_string(lhs) << " " << std::to_string(rhs) << std::endl;
     temp = lhs * rhs;
+    std::cout << "Result: " << temp << std::endl;
 }
 int interpreter::divOp()
 {
+    std::cout << "div: " << std::to_string(lhs) << " " << std::to_string(rhs) << std::endl;
     temp = lhs / rhs;
+    std::cout << "Result: " << temp << std::endl;
 }
 int interpreter::andOp()
 {
@@ -192,15 +200,16 @@ void interpreter::stop()
 }
 void interpreter::iconst()
 {
-    if (isLhs)
+    if (lineVector[3] == "L")
     {
         lhs = std::stoi(lineVector[2]);
+        std::cout << "lhs: " << lhs << std::endl;
         isLhs = false;
     }
     else
     {
         rhs = std::stoi(lineVector[2]);
-        isLhs = true;
+        std::cout << "rhs: " << rhs << std::endl;
     }
 }
 
@@ -218,25 +227,27 @@ stackEntry *interpreter::searchStack(std::string name)
 
 void interpreter::pop()
 {
-    if (isLhs)
+    if (lineVector[3] == "L")
     {
-        stackEntry *entry = entries[entries.size() - 1];
+        stackEntry *entry = entries[0];
         lhs = entry->value;
-        entries.pop_back();
+        std::cout << "load: " << lineVector[2] << " " << lhs << std::endl;
+        entries.erase(entries.begin());
         isLhs = false;
     }
     else
     {
-        stackEntry *entry = entries[entries.size() - 1];
+        stackEntry *entry = entries[0];
         rhs = entry->value;
-        entries.pop_back();
-        isLhs = true;
+        std::cout << "load: " << lineVector[2] << " " << rhs<< std::endl;
+        entries.erase(entries.begin());
     }
 }
 void interpreter::put()
 {
     if (lineVector[2].length() > 0)
     {
+        std::cout << "store: " << lineVector[2] << std::endl;
         stackEntry *var = searchStack(lineVector[2]);
         if (var != nullptr)
         {
@@ -249,6 +260,7 @@ void interpreter::put()
             entries.push_back(var);
         }
     }
+    isLhs = true;
 }
 
 void interpreter::interpret()
@@ -266,7 +278,6 @@ void interpreter::interpret()
         {
             break;
         }
-        isLhs = true;
     }
     byteCode.close();
 }
