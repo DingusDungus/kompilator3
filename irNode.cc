@@ -403,6 +403,7 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
     // link blocks
     currentBlock->trueExit = headBlock;
     headBlock->trueExit = trueBlock;
+    headBlock->falseExit = falseBlock;
     lhs->bblock->trueExit = headBlock;
     lhs->bblock->falseExit = falseBlock;
 
