@@ -372,8 +372,6 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     BBlock *trueBlock = new BBlock(genBlkName());
     BBlock *falseBlock = new BBlock(genBlkName());
     BBlock *joinBlock = new BBlock(genBlkName());
-    currentBlock->trueExit = trueBlock;
-    currentBlock->falseExit = falseBlock;
 
     lhs = child[1]->genIr(trueBlock);
     rhs = child[2]->genIr(falseBlock);
@@ -382,6 +380,8 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
 
     lhs->bblock->trueExit = joinBlock;
     rhs->bblock->trueExit = joinBlock;
+    currentBlock->trueExit = trueBlock;
+    currentBlock->falseExit = falseBlock;
 
     return new retStruct("ifElse-joinBlock", joinBlock);
 }
