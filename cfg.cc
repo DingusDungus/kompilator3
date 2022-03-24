@@ -173,9 +173,9 @@ irNode *CFG::parseNodes(Node *ptr)
     {
         return new irNode("ArrayIndexAssignStatement", ptr);
     }
-    // else if ("MethodDeclarationList") {
-    //     return new irNode("methodDecList", ptr);
-    // }
+    else if (ptr->type == "return") {
+        return new irNode("returnExp", ptr);
+    }
     else if (ptr->type == "MethodDeclaration")
     {
         return new irNode("methodDec", ptr);

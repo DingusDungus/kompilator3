@@ -293,6 +293,28 @@ public:
     }
 };
 
+class tacReturnExp : public tac
+{
+public:
+    tacReturnExp(std::string _p)
+    {
+        op = "return";
+        lhs = "";
+        rhs = _p;
+        result = "";
+    }
+    void dump() override
+    {
+        std::cout << op << " " << rhs << std::endl;
+    }
+    std::string getTacStream()
+    {
+            std::string tacString;
+            tacString = op + " " + rhs;
+            return tacString;
+    }
+};
+
 class parameter : public tac
 {
 public:
