@@ -32,6 +32,9 @@ CFG::CFG(Node *_root)
 void CFG::buildCFG()
 {
     iRoot->genIr(root);
+    tac *stop = new tac;
+    stop->result = "stop";
+    root->instructions.push_back(stop);
 }
 
 Node *CFG::searchTree(Node *root, std::string value)
@@ -128,9 +131,6 @@ void CFG::buildIrNodeAST(Node *node)
 {
     // start recursion
     buildIrNodeAST(nRoot, iRoot);
-    tac *stop = new tac;
-    stop->result = "stop";
-    root->instructions.push_back(stop);
 }
 
 irNode *CFG::parseNodes(Node *ptr)
