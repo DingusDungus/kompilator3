@@ -366,25 +366,6 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     lhs = child[1]->genIr(trueBlock);
     rhs = child[2]->genIr(falseBlock);
 
-    for (int i = 0; i < 5; i++)
-    {
-        std::cout << "\n";
-    }
-    std::cout << "Trueblock " << trueBlock->name << "\n";
-    for (int i = 0; i < trueBlock->instructions.size(); i++)
-    {
-        trueBlock->instructions[i]->dump();
-    }
-    std::cout << "\nfalseblock " << falseBlock->name << "\n";
-    for (int i = 0; i < falseBlock->instructions.size(); i++)
-    {
-        falseBlock->instructions[i]->dump();
-    }
-    for (int i = 0; i < 5; i++)
-    {
-        std::cout << "\n";
-    }
-
     currentBlock->instructions.push_back(in);
 
     lhs->bblock->trueExit = joinBlock;
