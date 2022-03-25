@@ -213,35 +213,27 @@ void interpreter::iconst()
     }
 }
 
-stackEntry *interpreter::searchStack(std::string name)
-{
-    for (auto i = entries.begin(); i != entries.end(); i++)
-    {
-        if (name == (*i)->varName)
-        {
-            return (*i);
-        }
-    }
-    return nullptr;
-}
-
 void interpreter::pop()
 {
+    entry *newEntry = entries.pop(lineVector[2]);
     if (lineVector[3] == "L")
     {
-        stackEntry *entry = entries.front();
-        entries.pop_front();
-        lhs = entry->value;
-        std::cout << "load: " << lineVector[2] << " " << lhs << std::endl;
-        isLhs = false;
+        if (newEntry != nullptr)
+        {
+            lhs = newEntry->value;
+            std::cout << "load: " << newEntry->name << " " << lineVector[2] << " " << lhs << std::endl;
+            isLhs = false;
+        }
     }
     else
     {
-        stackEntry *entry = entries.front();
-        entries.pop_front();
-        rhs = entry->value;
-        std::cout << "load: " << lineVector[2] << " " << rhs<< std::endl;
+        if (newEntry != nullptr)
+        {
+            rhs = newEntry->value;
+            std::cout << "load: " << newEntry->name << " " << lineVector[2] << " " << rhs << std::endl;
+        }
     }
+    // printStack();
 }
 void interpreter::put()
 {
@@ -249,9 +241,9 @@ void interpreter::put()
     {
         std::cout << "store: " << lineVector[2] << " : ";
         std::cout << temp << "\n";
-        stackEntry *var = new stackEntry(lineVector[2], temp);
-        entries.push_back(var);
+        entries.put(lineVector[2], temp);
     }
+    // printStack();
     isLhs = true;
 }
 
@@ -272,4 +264,23 @@ void interpreter::interpret()
         }
     }
     byteCode.close();
+}
+
+void interpreter::printStack()
+{
+    std::cout << std::endl;
+    /*
+    for (auto i = entries.begin(); i != entries.end(); i++)
+    {
+        if ((*i) != nullptr)
+        {
+        std::cout << (*i)->varName << " ";
+        }
+        else
+        {
+            std::cout << "nullptr "; 
+        }
+    }
+    */
+    std::cout << std::endl;
 }

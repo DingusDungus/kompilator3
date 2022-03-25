@@ -10,13 +10,7 @@
 #include <algorithm>
 #include <fstream>
 
-struct stackEntry
-{
-    stackEntry() : varName(""), value(0) {}
-    stackEntry(std::string name, int value) : varName(name), value(value) {}
-    std::string varName;
-    double value;
-};
+#include "linked_list.h"
 
 class interpreter
 {
@@ -28,12 +22,10 @@ private:
     bool isLhs;
 
     void parseLine(std::string line);
-    std::deque<stackEntry *> entries;
+    linked_list entries;
     std::vector<std::string> lineVector;
 
     bool parse(std::string line);
-
-    stackEntry *searchStack(std::string name);
 
     int addOp();
     int subOp();
@@ -50,6 +42,8 @@ private:
     void iconst();
     void store();
     void stop();
+
+    void printStack();
 
     void pop();
     void put();

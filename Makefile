@@ -1,5 +1,5 @@
 compiler: clean lex.yy.c parser.tab.o main.cc
-		g++ -g -w -o compiler parser.tab.o lex.yy.c main.cc symbolTable.cc semanticAnalyser.cc cfg.cc irNode.cc interpreter.cc -std=c++14
+		g++ -g -w -o compiler parser.tab.o lex.yy.c main.cc symbolTable.cc semanticAnalyser.cc cfg.cc irNode.cc interpreter.cc linked_list.cc -std=c++14
 parser.tab.o: parser.tab.cc
 		g++ -g -w -c parser.tab.cc -std=c++14
 parser.tab.cc: parser.yy

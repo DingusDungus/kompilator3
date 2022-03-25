@@ -56,9 +56,9 @@ int main(int argc, char **argv)
   // cfgGraph.printBlocks();
   // ST.printSTtree();
   cfgGraph.generate_tree();
-  // cfgGraph.genByteCode();
+   cfgGraph.genByteCode();
 
-  // it.interpret(); // disable for testing IR on Cambridge files.
+   it.interpret(); // disable for testing IR on Cambridge files.
 
   return 0;
 }
