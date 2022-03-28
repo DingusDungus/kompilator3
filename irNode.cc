@@ -193,8 +193,9 @@ retStruct *irNode::methodDec(BBlock *currentBlock)
     }
     std::string returnIr = child[child.size()-1]->genIr(lhs->bblock)->value;
     std::cout << "method return block: " << returnIr << std::endl;
-    lhs->bblock->trueExit = methodBlock;
-    // methodBlock->falseExit = lhs->bblock; // arrows wrong way, 
+
+    // arrow between return block and first method block
+    // lhs->bblock->trueExit = methodBlock;
 
     methodDecBlocks.push_back(methodBlock);
     return new retStruct("methodDec", methodBlock);
@@ -384,12 +385,10 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     if (child[1] != nullptr){
         lhs = child[1]->genIr(trueBlock);
         std::cout << "IfElse lhs_block: " << lhs->bblock->name << std::endl;
-        lhs->bblock->trueExit = joinBlock;
     }
     if (child[2] != nullptr){
         rhs = child[2]->genIr(falseBlock);
         std::cout << "IfElse rhs_block: " << rhs->bblock->name << std::endl;
-        rhs->bblock->trueExit = joinBlock;
     }
 
     std::cout << "IfElse currentBlock: " << currentBlock->name << std::endl;
@@ -397,8 +396,10 @@ retStruct *irNode::ifElse(BBlock *currentBlock)
     std::cout << "IfElse trueBlock: " << trueBlock->name << std::endl;
     std::cout << "IfElse falseBlock: " << falseBlock->name << std::endl;
     // link blocks
-    trueBlock->trueExit = joinBlock;
-    falseBlock->trueExit = joinBlock;
+        lhs->bblock->trueExit = joinBlock;
+        rhs->bblock->trueExit = joinBlock;
+    // trueBlock->trueExit = joinBlock;
+    // falseBlock->trueExit = joinBlock;
     currentBlock->trueExit = trueBlock;
     currentBlock->falseExit = falseBlock;
 
