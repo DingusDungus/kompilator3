@@ -48,7 +48,7 @@ public:
         }
         else if (trueExit != nullptr && trueExit->visited != true)
         {
-            *outStream << "n" << trueExit->id << " -> n" << id << endl;
+            *outStream << "n" << id << " -> n" << trueExit->id << endl;
         }
 
         if (falseExit != nullptr && falseExit->visited != false )
@@ -58,7 +58,7 @@ public:
         }
         else if (falseExit != nullptr && falseExit->visited != true)
         {
-            *outStream << "n" << falseExit->id << " -> n" << id << endl;
+            *outStream << "n" << id << " -> n" << falseExit->id << endl;
         }
     }
 };
