@@ -436,7 +436,6 @@ retStruct *irNode::whileStmt(BBlock *currentBlock)
     headBlock->trueExit = trueBlock;
     headBlock->falseExit = joinBlock;
     lhs->bblock->trueExit = headBlock;
-    // lhs->bblock->falseExit = joinBlock;
 
     return new retStruct("while-statement-falseBlock", joinBlock);
 }
