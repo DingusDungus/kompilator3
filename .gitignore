@@ -33,6 +33,7 @@
 *compiler
 
 # Extra
+*.zip
 tree.pdf
 cfgTree.pdf
 irTree.pdf
